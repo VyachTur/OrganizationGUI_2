@@ -1,12 +1,236 @@
-﻿<Window x:Class="OrganizationGUI_2.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OrganizationGUI_2"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+﻿<Window
+	x:Class="OrganizationGUI_2.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:OrganizationGUI_2"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Title="ОБРПРБД 'Обычная организация'"
+	Width="800"
+	Height="550"
+	MinWidth="670"
+	MinHeight="450"
+	mc:Ignorable="d">
 
-    </Grid>
+	<Window.Resources>
+		<Style TargetType="Border">
+			<Setter Property="BorderBrush" Value="Black" />
+			<Setter Property="BorderThickness" Value="0.5" />
+		</Style>
+		<Style TargetType="TextBlock">
+			<Setter Property="FontSize" Value="18" />
+			<Setter Property="FontWeight" Value="Bold" />
+			<Setter Property="Margin" Value="10,0,5,10" />
+		</Style>
+		<Style x:Key="PlainText">
+			<Setter Property="TextBlock.Margin" Value="0" />
+			<Setter Property="TextBlock.FontSize" Value="16" />
+			<Setter Property="TextBlock.FontWeight" Value="Normal" />
+		</Style>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" MinWidth="250" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<Menu
+			Grid.ColumnSpan="2"
+			Margin="0,0,0,5"
+			FontSize="14">
+			<MenuItem Header="Файл">
+				<MenuItem Click="MenuItemLoad_Click" Header="Загрузить" />
+				<MenuItem Click="MenuItemUnload_Click" Header="Выгрузить" />
+				<Separator />
+				<MenuItem Click="MenuItemExit_Click" Header="Выйти" />
+			</MenuItem>
+		</Menu>
+
+		<Border
+			Grid.Row="1"
+			Grid.Column="0"
+			Grid.ColumnSpan="2"
+			Margin="5,0,5,5">
+			<StackPanel Margin="0" Orientation="Vertical">
+
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Начальник организации: " />
+					<TextBlock
+						FontSize="18"
+						FontWeight="Medium"
+						Style="{StaticResource PlainText}"
+						Text="{Binding Dir.Name}" />
+					<TextBlock
+						FontSize="18"
+						FontWeight="Medium"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat={} {0}, Path=Dir.LastName}" />
+					<TextBlock
+						FontSize="18"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat=\, зарплата: {0} р., Path=DirSalary}" />
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Заместитель начальника: " />
+					<TextBlock
+						FontSize="18"
+						FontWeight="Medium"
+						Style="{StaticResource PlainText}"
+						Text="{Binding AssociateDir.Name}" />
+					<TextBlock
+						FontSize="18"
+						FontWeight="Medium"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat={} {0}, Path=AssociateDir.LastName}" />
+					<TextBlock
+						FontSize="18"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat=\, зарплата: {0} р., Path=AssociateDirSalary}" />
+				</StackPanel>
+
+			</StackPanel>
+		</Border>
+
+		<TreeView
+			x:Name="organizationTree"
+			Grid.Row="2"
+			Grid.RowSpan="6"
+			MaxWidth="300"
+			Margin="5,0,15,5"
+			FontSize="16">
+			<TreeView.ItemTemplate>
+				<HierarchicalDataTemplate ItemsSource="{Binding Path=Departs}">
+					<TextBlock Text="{Binding Name}" />
+				</HierarchicalDataTemplate>
+			</TreeView.ItemTemplate>
+		</TreeView>
+
+		<Border
+			Grid.Row="3"
+			Grid.RowSpan="4"
+			Grid.Column="1"
+			Margin="0,0,5,5">
+
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="2*" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+
+				<TextBlock Margin="5,0,5,0" Text="Начальник департамента:" />
+
+
+				<StackPanel
+					Grid.Row="1"
+					Margin="5,0,5,5"
+					Orientation="Vertical">
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock
+							FontWeight="Medium"
+							Style="{StaticResource PlainText}"
+							Text="{Binding ElementName=organizationTree, Path=SelectedItem.LocalBoss.Name}" />
+						<TextBlock
+							FontWeight="Medium"
+							Style="{StaticResource PlainText}"
+							Text="{Binding StringFormat={} {0}, ElementName=organizationTree, Path=SelectedItem.LocalBoss.LastName}" />
+						<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=\, полных лет: {0}, ElementName=organizationTree, Path=SelectedItem.LocalBoss.Age}" />
+					</StackPanel>
+
+					<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=Зарплата: {0} р., ElementName=organizationTree, Path=SelectedItem.LocalBossSalary}" />
+
+				</StackPanel>
+
+				<TextBlock
+					Grid.Row="2"
+					Margin="5,0,5,5"
+					Text="Сотрудники:" />
+
+				<ListView
+					x:Name="employeesList"
+					Grid.Row="3"
+					Margin="5,0,5,0"
+					ItemsSource="{Binding ElementName=organizationTree, Path=SelectedItem.Employees}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock FontSize="16" Text="{Binding Path=Name}" />
+									<TextBlock FontSize="16" Text=" " />
+									<TextBlock FontSize="16" Text="{Binding Path=LastName}" />
+								</StackPanel>
+								<StackPanel Orientation="Horizontal">
+									<TextBlock FontSize="12" Text="{Binding Path=NamePost}" />
+									<TextBlock FontSize="12" Text=", зарплата: " />
+									<TextBlock Text="{Binding Path=Salary}" />
+									<TextBlock Text=" р." />
+								</StackPanel>
+							</StackPanel>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
+				<TextBlock
+					Grid.Row="4"
+					Margin="0,0,30,5"
+					HorizontalAlignment="Right"
+					Style="{StaticResource PlainText}"
+					Text="{Binding StringFormat=Всего сотрудников: {0}, ElementName=organizationTree, Path=SelectedItem.CountEmployees}" />
+
+				<TextBlock
+					Grid.Row="5"
+					Margin="5,0,5,5"
+					Text="Интерны:" />
+
+				<ListView
+					x:Name="internsList"
+					Grid.Row="6"
+					Margin="5,0,5,0"
+					ItemsSource="{Binding ElementName=organizationTree, Path=SelectedItem.Interns}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock FontSize="16" Text="{Binding Path=Name}" />
+									<TextBlock FontSize="16" Text=" " />
+									<TextBlock FontSize="16" Text="{Binding Path=LastName}" />
+								</StackPanel>
+								<StackPanel Orientation="Horizontal">
+									<TextBlock FontSize="12" Text="Зарплата: " />
+									<TextBlock Text="{Binding Path=Salary}" />
+									<TextBlock Text=" р." />
+								</StackPanel>
+							</StackPanel>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
+				<TextBlock
+					Grid.Row="7"
+					Margin="0,0,30,5"
+					HorizontalAlignment="Right"
+					Style="{StaticResource PlainText}"
+					Text="{Binding StringFormat=Всего интернов: {0}, ElementName=organizationTree, Path=SelectedItem.CountInterns}" />
+
+			</Grid>
+
+		</Border>
+
+	</Grid>
+
 </Window>
