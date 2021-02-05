@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
@@ -12,17 +14,17 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Имя работника
 		/// </summary>
-		public string Name { get; protected set; }
+		public abstract string Name { get; set; }
 
 		/// <summary>
 		/// Фамилия работника
 		/// </summary>
-		public string LastName { get; protected set; }
+		public abstract string LastName { get; set; }
 
 		/// <summary>
 		/// Дата рождения работника
 		/// </summary>
-		public DateTime BirthDate { get; protected set; }
+		public abstract DateTime BirthDate { get; set; }
 
 		/// <summary>
 		/// Идентификатор работника
@@ -43,6 +45,16 @@ namespace OrganizationGUI.Classes
 		}
 
 		#endregion  // Property
+
+
+		#region Fields
+
+		protected static int countWorker = 0;	// количество созданных работников (нач. деп., сотрудники, интерны)
+
+		#endregion
+
+
+		
 
 	}
 }

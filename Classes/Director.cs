@@ -1,12 +1,26 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Класс директора (синглтон, т.к. директор в организации один)
 	/// </summary>
-	public class Director : Worker
+	public class Director : Worker, INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
 		#region Constructors
 
 		/// <summary>
@@ -33,6 +47,57 @@ namespace OrganizationGUI.Classes
 		#endregion  // Constructors
 
 		#region Properties
+
+		/// <summary>
+		/// Имя директора
+		/// </summary>
+		public override string Name
+		{
+			get
+			{
+				return name;
+			}
+
+			set
+			{
+				name = value;
+				OnPropertyChanged("Name");
+			}
+		}
+
+		/// <summary>
+		/// Фамилия директора
+		/// </summary>
+		public override string LastName
+		{
+			get
+			{
+				return lastName;
+			}
+
+			set
+			{
+				lastName = value;
+				OnPropertyChanged("LastName");
+			}
+		}
+
+		/// <summary>
+		/// Дата рождения директора
+		/// </summary>
+		public override DateTime BirthDate
+		{
+			get
+			{
+				return birthDate;
+			}
+
+			set
+			{
+				birthDate = value;
+				OnPropertyChanged("BirthDate");
+			}
+		}
 
 		/// <summary>
 		/// Идентификатор директора
@@ -64,7 +129,18 @@ namespace OrganizationGUI.Classes
 
 		#endregion  // Methods
 
+
+		#region Fields
+
+		private string name;                    // имя директора
+		private string lastName;                // фамилия директора
+		private DateTime birthDate;             // дата рождения директора
+
 		private static Director instance;   // поле (инстанс) для синглтона
+
+		#endregion
+
+		
 
 	}
 }

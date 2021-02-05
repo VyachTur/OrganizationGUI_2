@@ -1,12 +1,26 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Заместитель директора организации (синглтон, т.к. зам один в организации)
 	/// </summary>
-	public class AssociateDirector : Worker
+	public class AssociateDirector : Worker, INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
 		#region Constructors
 
 		/// <summary>
@@ -33,6 +47,57 @@ namespace OrganizationGUI.Classes
 		#endregion  // Constructors
 
 		#region Properties
+
+		/// <summary>
+		/// Имя заместителя директора
+		/// </summary>
+		public override string Name
+		{
+			get
+			{
+				return name;
+			}
+
+			set
+			{
+				name = value;
+				OnPropertyChanged("Name");
+			}
+		}
+
+		/// <summary>
+		/// Фамилия заместителя директора
+		/// </summary>
+		public override string LastName
+		{
+			get
+			{
+				return lastName;
+			}
+
+			set
+			{
+				lastName = value;
+				OnPropertyChanged("LastName");
+			}
+		}
+
+		/// <summary>
+		/// Дата рождения заместителя директора
+		/// </summary>
+		public override DateTime BirthDate
+		{
+			get
+			{
+				return birthDate;
+			}
+
+			set
+			{
+				birthDate = value;
+				OnPropertyChanged("BirthDate");
+			}
+		}
 
 		/// <summary>
 		/// Идентификатор заместителя директора
@@ -71,7 +136,15 @@ namespace OrganizationGUI.Classes
 
 		#endregion  // Methods
 
+
+		#region Fields
+
+		private string name;                    // имя заместителя директора
+		private string lastName;                // фамилия заместителя директора
+		private DateTime birthDate;             // дата рождения заместителя директора
+
 		private static AssociateDirector instance;   // поле (инстанс) для синглтона
 
+		#endregion
 	}
 }

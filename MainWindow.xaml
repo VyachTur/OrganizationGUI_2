@@ -52,6 +52,97 @@
 				<Separator />
 				<MenuItem Click="MenuItemExit_Click" Header="Выйти" />
 			</MenuItem>
+			<MenuItem Header="Редактирование">
+				<MenuItem Header="Сортировать работников">
+					<MenuItem>
+						<MenuItem.Template>
+							<ControlTemplate>
+								<RadioButton
+									Margin="7,0,0,0"
+									Padding="14,0,0,0"
+									VerticalContentAlignment="Center"
+									GroupName="sort"
+									IsChecked="True">
+									По Id
+								</RadioButton>
+							</ControlTemplate>
+						</MenuItem.Template>
+					</MenuItem>
+
+					<MenuItem>
+						<MenuItem.Template>
+							<ControlTemplate>
+								<RadioButton
+									Margin="7,0,0,0"
+									Padding="14,0,0,0"
+									VerticalContentAlignment="Center"
+									GroupName="sort">
+									По возрасту
+								</RadioButton>
+							</ControlTemplate>
+						</MenuItem.Template>
+					</MenuItem>
+
+					<MenuItem>
+						<MenuItem.Template>
+							<ControlTemplate>
+								<RadioButton
+									Margin="7,0,0,0"
+									Padding="14,0,0,0"
+									VerticalContentAlignment="Center"
+									GroupName="sort">
+									По имени
+								</RadioButton>
+							</ControlTemplate>
+						</MenuItem.Template>
+					</MenuItem>
+
+					<MenuItem>
+						<MenuItem.Template>
+							<ControlTemplate>
+								<RadioButton
+									Margin="7,0,0,0"
+									Padding="14,0,0,0"
+									VerticalContentAlignment="Center"
+									GroupName="sort">
+									По фамилии
+								</RadioButton>
+							</ControlTemplate>
+						</MenuItem.Template>
+					</MenuItem>
+
+					<MenuItem>
+						<MenuItem.Template>
+							<ControlTemplate>
+								<RadioButton
+									Margin="7,0,0,0"
+									Padding="14,0,0,0"
+									VerticalContentAlignment="Center"
+									GroupName="sort">
+									По имени и фамилии
+								</RadioButton>
+							</ControlTemplate>
+						</MenuItem.Template>
+					</MenuItem>
+
+					<MenuItem>
+						<MenuItem.Template>
+							<ControlTemplate>
+								<RadioButton
+									Margin="7,0,0,0"
+									Padding="14,0,0,0"
+									VerticalContentAlignment="Center"
+									GroupName="sort">
+									По фамилии и имени
+								</RadioButton>
+							</ControlTemplate>
+						</MenuItem.Template>
+					</MenuItem>
+
+				</MenuItem>
+				<Separator />
+				<MenuItem Header="Управление департаментами и сотрудниками" />
+			</MenuItem>
 		</Menu>
 
 		<Border
@@ -170,19 +261,44 @@
 						<DataTemplate>
 							<StackPanel Orientation="Vertical">
 								<StackPanel Orientation="Horizontal">
-									<TextBlock FontSize="16" Text="{Binding Path=Name}" />
+									<TextBlock
+										FontSize="16"
+										FontWeight="Medium"
+										Text="{Binding Path=Name}" />
 									<TextBlock FontSize="16" Text=" " />
-									<TextBlock FontSize="16" Text="{Binding Path=LastName}" />
+									<TextBlock
+										FontSize="16"
+										FontWeight="Medium"
+										Text="{Binding Path=LastName}" />
+									<TextBlock
+										VerticalAlignment="Bottom"
+										FontSize="14"
+										Text=", полных лет: " />
+									<TextBlock
+										VerticalAlignment="Bottom"
+										FontSize="14"
+										Text="{Binding Path=Age}" />
 								</StackPanel>
 								<StackPanel Orientation="Horizontal">
 									<TextBlock FontSize="12" Text="{Binding Path=NamePost}" />
 									<TextBlock FontSize="12" Text=", зарплата: " />
-									<TextBlock Text="{Binding Path=Salary}" />
-									<TextBlock Text=" р." />
+									<TextBlock
+										FontSize="12"
+										FontWeight="Medium"
+										Text="{Binding Path=Salary}" />
+									<TextBlock
+										FontSize="12"
+										FontWeight="Medium"
+										Text=" р." />
 								</StackPanel>
 							</StackPanel>
 						</DataTemplate>
 					</ListView.ItemTemplate>
+					<ListView.ContextMenu>
+						<ContextMenu>
+							<MenuItem Click="MenuItemDel_Click" Header="Удалить" />
+						</ContextMenu>
+					</ListView.ContextMenu>
 				</ListView>
 
 				<TextBlock
@@ -206,9 +322,23 @@
 						<DataTemplate>
 							<StackPanel Orientation="Vertical">
 								<StackPanel Orientation="Horizontal">
-									<TextBlock FontSize="16" Text="{Binding Path=Name}" />
+									<TextBlock
+										FontSize="16"
+										FontWeight="Medium"
+										Text="{Binding Path=Name}" />
 									<TextBlock FontSize="16" Text=" " />
-									<TextBlock FontSize="16" Text="{Binding Path=LastName}" />
+									<TextBlock
+										FontSize="16"
+										FontWeight="Medium"
+										Text="{Binding Path=LastName}" />
+									<TextBlock
+										VerticalAlignment="Bottom"
+										FontSize="14"
+										Text=", полных лет: " />
+									<TextBlock
+										VerticalAlignment="Bottom"
+										FontSize="14"
+										Text="{Binding Path=Age}" />
 								</StackPanel>
 								<StackPanel Orientation="Horizontal">
 									<TextBlock FontSize="12" Text="Зарплата: " />
@@ -218,6 +348,11 @@
 							</StackPanel>
 						</DataTemplate>
 					</ListView.ItemTemplate>
+					<ListView.ContextMenu>
+						<ContextMenu>
+							<MenuItem Header="Удалить" />
+						</ContextMenu>
+					</ListView.ContextMenu>
 				</ListView>
 
 				<TextBlock

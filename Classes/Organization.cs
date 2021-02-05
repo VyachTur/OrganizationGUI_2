@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
 namespace OrganizationGUI.Classes
@@ -10,8 +12,20 @@ namespace OrganizationGUI.Classes
 	/// <summary>
 	/// Организация
 	/// </summary>
-	public class Organization
+	public class Organization : INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
 
 		#region Constructors
 
@@ -55,12 +69,12 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Название организации
 		/// </summary>
-		public string Name { get; set; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// Директор
 		/// </summary>
-		public Director Dir { get; set; }
+		public Director Dir { get; private set; }
 
 		/// <summary>
 		/// Заместитель директора
@@ -125,6 +139,11 @@ namespace OrganizationGUI.Classes
 
 		#endregion  // Properties
 
+		
+
+
+		#region Methods
+
 		/// <summary>
 		/// Сумма зарплат всех работников (включая начальников департаментов)
 		/// </summary>
@@ -141,17 +160,29 @@ namespace OrganizationGUI.Classes
 			return sum;
 		}
 
-
-		#region Methods
+		public void salaryDirAssDirRefresh()
+		{
+			OnPropertyChanged("DirSalary");
+			OnPropertyChanged("AssociateDirSalary");
+		}
 
 		/// <summary>
 		/// Добавление департамента в коллекцию департаментов
 		/// </summary>
 		/// <param name="dep">Департамент</param>
-		public void addDepartament(Department dep)
+		public void addDepartment(Department dep)
 		{
 			departments.Add(dep);
 		}
+
+
+
+
+		////////////////////////////
+		//TODO: Сделать методы работы с департаментом (удаление, добавление нового)
+		/////////////////////////////
+		///
+
 
 
 		/// <summary>
@@ -319,7 +350,7 @@ namespace OrganizationGUI.Classes
 				Department dep = deserializerSubDeps(itemDepXml);
 
 
-				org.addDepartament(dep); // добавляем созданный отдел в организацию
+				org.addDepartment(dep); // добавляем созданный отдел в организацию
 			}
 
 			return org;
@@ -364,7 +395,7 @@ namespace OrganizationGUI.Classes
 				foreach (var itemSubdepXml in xeDep.Element("DEPARTMENTS").Elements("DEPARTMENT").ToList())
 				{
 					// ПОДДЕПАРТАМЕНТЫ ДЕПАРТАМЕНТА
-					dep.addDepartament(deserializerSubDeps(itemSubdepXml));	// рекурсия
+					dep.addDepartment(deserializerSubDeps(itemSubdepXml));	// рекурсия
 				}
 			}
 

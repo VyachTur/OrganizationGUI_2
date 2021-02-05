@@ -1,18 +1,32 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Рабочий (сотрудник)
 	/// </summary>
-	public class Employee : Worker, IPost, ISalary
+	public class Employee : Worker, IPost, ISalary, INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
 		#region Constructors
 
 		/// <summary>
 		/// Конструктор по умолчанию
 		/// </summary>
-		public Employee() { Id = ++countEmp; }
+		public Employee() { Id = ++countWorker; }
 
 		/// <summary>
 		/// Конструктор 1
@@ -29,7 +43,7 @@ namespace OrganizationGUI.Classes
 			BirthDate = birthDate;
 			NamePost = namePost;
 			Salary = salary * 168;  // умножаем на 168 рабочих часов в месяце
-			Id = ++countEmp;
+			Id = ++countWorker;
 		}
 
 
@@ -39,19 +53,94 @@ namespace OrganizationGUI.Classes
 		#region Properties
 
 		/// <summary>
-		/// Идентификатор рабочего
+		/// Имя сотрудника
+		/// </summary>
+		public override string Name
+		{
+			get
+			{
+				return name;
+			}
+
+			set
+			{
+				name = value;
+				OnPropertyChanged("Name");
+			}
+		}
+
+		/// <summary>
+		/// Фамилия сотрудника
+		/// </summary>
+		public override string LastName
+		{
+			get
+			{
+				return lastName;
+			}
+
+			set
+			{
+				lastName = value;
+				OnPropertyChanged("LastName");
+			}
+		}
+
+		/// <summary>
+		/// Дата рождения сотрудника
+		/// </summary>
+		public override DateTime BirthDate
+		{
+			get
+			{
+				return birthDate;
+			}
+
+			set
+			{
+				birthDate = value;
+				OnPropertyChanged("BirthDate");
+			}
+		}
+
+		/// <summary>
+		/// Идентификатор сотрудника
 		/// </summary>
 		public override int Id { get; }
 
 		/// <summary>
 		/// Наименование должности
 		/// </summary>
-		public string NamePost { get; set; }
+		public string NamePost
+		{
+			get 
+			{ 
+				return namePost;
+			}
+
+			set
+			{ 
+				namePost = value;
+				OnPropertyChanged("NamePost"); 
+			} 
+		}
 
 		/// <summary>
 		/// Зарплата сотрудника
 		/// </summary>
-		public int Salary { get; set; }
+		public int Salary 
+		{ 
+			get
+			{
+				return salary;
+			}
+
+			set
+			{
+				salary = value;
+				OnPropertyChanged("Salary");
+			} 
+		}
 
 		#endregion  // Properties
 
@@ -74,6 +163,17 @@ namespace OrganizationGUI.Classes
 		#endregion  // Methods
 
 
-		private static int countEmp = 0;    // количество созданных рабочих
+		#region Fields
+
+		private string name;                    // имя сотрудника
+		private string lastName;                // фамилия сотрудника
+		private DateTime birthDate;             // дата рождения сотрудника
+
+		private string namePost;	// наименование должности сотрудника
+		private int salary;         // зарплата сотрудника
+
+		#endregion   // Fields
+
+
 	}
 }

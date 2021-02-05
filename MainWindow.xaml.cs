@@ -4,6 +4,7 @@ using OrganizationGUI.Classes;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.IO;
 
 namespace OrganizationGUI_2
 {
@@ -26,11 +27,11 @@ namespace OrganizationGUI_2
 
 			#region Наполнение структуры организации из кода
 
-			//ObservableCollection<Organization> orgs;
-			//orgs = returnAnyOrganization();
+			ObservableCollection<Organization> orgs;
+			orgs = returnAnyOrganization();
 
-			//organizationTree.ItemsSource = orgs;
-			//DataContext = orgs[0];
+			organizationTree.ItemsSource = orgs;
+			DataContext = orgs[0];
 
 			#endregion    // Наполнение структуры организации из кода
 		}
@@ -205,9 +206,9 @@ namespace OrganizationGUI_2
 
 
 			// Добавление поддепартаментов в департаменты
-			departament12.addDepartament(departament121);
-			departament1.addDepartament(departament11);
-			departament1.addDepartament(departament12);
+			departament12.addDepartment(departament121);
+			departament1.addDepartment(departament11);
+			departament1.addDepartment(departament12);
 
 
 			#endregion   // Департамент 1
@@ -285,7 +286,7 @@ namespace OrganizationGUI_2
 			workers2111.Add(new Employee("Павел", "Петров", new DateTime(1972, 04, 28), "Системный администратор", 550));
 			workers2111.Add(new Intern("Юлия", "Июльская", new DateTime(1995, 11, 17), 40_000));
 
-			// Создание департамента 2111
+			//Создание департамента 2111
 			Department departament2111 = new Department("Департамент 2111", depBoss2111, workers2111);
 
 			#endregion   // Департамент 2111
@@ -382,14 +383,14 @@ namespace OrganizationGUI_2
 
 
 			// Добавление поддепартаментов в департаменты
-			departament211.addDepartament(departament2111);
-			departament21.addDepartament(departament211);
-			departament21.addDepartament(departament212);
-			departament23.addDepartament(departament231);
-			departament23.addDepartament(departament232);
-			departament2.addDepartament(departament21);
-			departament2.addDepartament(departament22);
-			departament2.addDepartament(departament23);
+			departament211.addDepartment(departament2111);
+			departament21.addDepartment(departament211);
+			departament21.addDepartment(departament212);
+			departament23.addDepartment(departament231);
+			departament23.addDepartment(departament232);
+			departament2.addDepartment(departament21);
+			departament2.addDepartment(departament22);
+			departament2.addDepartment(departament23);
 
 
 			#endregion  // Департамент 2
@@ -397,8 +398,8 @@ namespace OrganizationGUI_2
 
 			// Создание организации
 			Organization organization = new Organization("Организация", director, assDirector);
-			organization.addDepartament(departament1);
-			organization.addDepartament(departament2);
+			organization.addDepartment(departament1);
+			organization.addDepartment(departament2);
 
 			ObservableCollection<Organization> orgs = new ObservableCollection<Organization>();
 			orgs.Add(organization);
@@ -408,5 +409,15 @@ namespace OrganizationGUI_2
 
 		}
 
+		private void MenuItemDel_Click(object sender, RoutedEventArgs e)
+		{
+
+			//(organizationTree.SelectedItem as Department).removeWorker((employeesList.SelectedItem as Worker).Id);	// удаление сотрудника с переданным Id
+			(employeesList.SelectedItem as Employee).Salary = 1000000;  // изменение зарплаты сотрудника
+			(employeesList.SelectedItem as Employee).Name = "НОВОИМЕННЫЙ";  // изменение имени сотрудника
+
+			//(organizationTree.Items[0] as Organization).salaryDirAssDirRefresh();
+
+		}
 	}
 }

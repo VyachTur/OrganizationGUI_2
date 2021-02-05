@@ -1,17 +1,32 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Начальник департамента
 	/// </summary>
-	public class DepBoss : Worker
+	public class DepBoss : Worker, INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
 		#region Constructors
 
 		/// <summary>
 		/// Конструктор по умолчанию
 		/// </summary>
-		public DepBoss() { Id = ++countDepBoss; }
+		public DepBoss() { Id = ++countWorker; }
 
 		/// <summary>
 		/// Конструктор
@@ -25,12 +40,63 @@ namespace OrganizationGUI.Classes
 			LastName = lastName;
 			BirthDate = birthDate;
 
-			Id = ++countDepBoss;
+			Id = ++countWorker;
 		}
 
 		#endregion  // Constructors
 
 		#region Properties
+
+		/// <summary>
+		/// Имя начальника департамента
+		/// </summary>
+		public override string Name
+		{
+			get
+			{
+				return name;
+			}
+
+			set
+			{
+				name = value;
+				OnPropertyChanged("Name");
+			}
+		}
+
+		/// <summary>
+		/// Фамилия начальника департамента
+		/// </summary>
+		public override string LastName
+		{
+			get
+			{
+				return lastName;
+			}
+
+			set
+			{
+				lastName = value;
+				OnPropertyChanged("LastName");
+			}
+		}
+
+		/// <summary>
+		/// Дата рождения начальника департамента
+		/// </summary>
+		public override DateTime BirthDate
+		{
+			get
+			{
+				return birthDate;
+			}
+
+			set
+			{
+				birthDate = value;
+				OnPropertyChanged("BirthDate");
+			}
+		}
 
 		/// <summary>
 		/// Идентификатор рабочего
@@ -56,7 +122,14 @@ namespace OrganizationGUI.Classes
 
 		#endregion  // Methods
 
+		#region Fields
 
-		private static int countDepBoss = 0;    // количество созданных рабочих
+		private string name;                    // имя начальника департамента
+		private string lastName;                // фамилия начальника департамента
+		private DateTime birthDate;             // дата рождения начальника департамента
+
+		#endregion
+
+
 	}
 }

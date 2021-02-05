@@ -1,12 +1,27 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Интерн
 	/// </summary>
-	public class Intern : Worker, ISalary
+	public class Intern : Worker, ISalary, INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
 		#region Constructors
 
 		/// <summary>
@@ -14,7 +29,7 @@ namespace OrganizationGUI.Classes
 		/// </summary>
 		public Intern()
 		{
-			Id = ++countIntern;
+			Id = ++countWorker;
 		}
 
 		/// <summary>
@@ -31,12 +46,63 @@ namespace OrganizationGUI.Classes
 			BirthDate = birthDate;
 			Salary = salary;
 
-			Id = ++countIntern;
+			Id = ++countWorker;
 		}
 
 		#endregion  // Constructors
 
 		#region Properties
+
+		/// <summary>
+		/// Имя интерна
+		/// </summary>
+		public override string Name
+		{
+			get
+			{
+				return name;
+			}
+
+			set
+			{
+				name = value;
+				OnPropertyChanged("Name");
+			}
+		}
+
+		/// <summary>
+		/// Фамилия интерна
+		/// </summary>
+		public override string LastName
+		{
+			get
+			{
+				return lastName;
+			}
+
+			set
+			{
+				lastName = value;
+				OnPropertyChanged("LastName");
+			}
+		}
+
+		/// <summary>
+		/// Дата рождения интерна
+		/// </summary>
+		public override DateTime BirthDate
+		{
+			get
+			{
+				return birthDate;
+			}
+
+			set
+			{
+				birthDate = value;
+				OnPropertyChanged("BirthDate");
+			}
+		}
 
 		/// <summary>
 		/// Идентификатор интерна
@@ -46,7 +112,19 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Зарплата интерна
 		/// </summary>
-		public int Salary { get; set; }
+		public int Salary 
+		{ 
+			get
+			{
+				return salary;
+			}
+				
+			set
+			{
+				salary = value;
+				OnPropertyChanged("Salary");
+			} 
+		}
 
 		#endregion  // Properties
 
@@ -67,7 +145,10 @@ namespace OrganizationGUI.Classes
 
 		#endregion  // Methods
 
+		private string name;                    // имя интерна
+		private string lastName;                // фамилия интерна
+		private DateTime birthDate;             // дата рождения интерна
 
-		private static int countIntern = 0;    // количество созданных интернов
+		private int salary;    // зарплата интерна
 	}
 }
