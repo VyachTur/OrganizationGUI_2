@@ -261,6 +261,7 @@ namespace OrganizationGUI.Classes
 		public void removeWorker(int id)
 		{
 			workers.Remove(returnWorkerDepById(id));
+			//workers.Add(new Employee("Шарап", "Сишарпов", new DateTime(1974, 6, 17), "Главный программист", 1_000));
 
 			refreshView();
 			refreshLocalBossSalary();
