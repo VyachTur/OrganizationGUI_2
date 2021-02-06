@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
+using System.Collections.Generic;
+
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
@@ -160,7 +162,10 @@ namespace OrganizationGUI.Classes
 			return sum;
 		}
 
-		public void salaryDirAssDirRefresh()
+		/// <summary>
+		/// Обновление отображения зарплат директора и зам. директора
+		/// </summary>
+		public void refreshDirAssDirSalary()
 		{
 			OnPropertyChanged("DirSalary");
 			OnPropertyChanged("AssociateDirSalary");
@@ -175,6 +180,29 @@ namespace OrganizationGUI.Classes
 			departments.Add(dep);
 		}
 
+		/// <summary>
+		/// Возвращаем департамент по его Id
+		/// </summary>
+		/// <param name="id">Идентификатор департамента</param>
+		/// <returns>Департамент</returns>
+		//public Department returnDepartmentById(int id)
+		//{
+		//	return Departs.Where(item => item.Id == id).First<Department>();
+		//}
+
+		/// <summary>
+		/// Возвращаем работника по Id
+		/// </summary>
+		/// <param name="depId">Идентификатор департамента, где находится работник</param>
+		/// <param name="workerId">Идентификатор работника</param>
+		/// <returns></returns>
+		//public Worker returnWorkerOrgById(int depId, int workerId)
+		//{
+		//	return Departs.Where(item => item.Id == depId).First<Department>().returnWorkerDepById(workerId);
+		//}
+
+
+		//public void removeDepartment
 
 
 

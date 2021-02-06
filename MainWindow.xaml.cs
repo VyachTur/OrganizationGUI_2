@@ -412,11 +412,30 @@ namespace OrganizationGUI_2
 		private void MenuItemDel_Click(object sender, RoutedEventArgs e)
 		{
 
-			//(organizationTree.SelectedItem as Department).removeWorker((employeesList.SelectedItem as Worker).Id);	// удаление сотрудника с переданным Id
-			(employeesList.SelectedItem as Employee).Salary = 1000000;  // изменение зарплаты сотрудника
-			(employeesList.SelectedItem as Employee).Name = "НОВОИМЕННЫЙ";  // изменение имени сотрудника
+			(organizationTree.SelectedItem as Department).removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
 
-			//(organizationTree.Items[0] as Organization).salaryDirAssDirRefresh();
+
+
+
+
+
+			//MessageBox.Show((organizationTree.Items[0] as Organization)?.returnWorkerOrgById(
+			//																			(organizationTree.SelectedItem as Department).Id,
+			//																			(employeesList.SelectedItem as Employee).Id
+			//																			).ToString()
+			//				);
+
+			//MessageBox.Show((organizationTree.Items[0] as Organization)?.returnDepartmentById(
+			//																			(organizationTree.SelectedItem as Department).Id
+			//																			).ToString()
+			//				);
+
+
+			//(employeesList.SelectedItem as Employee).Salary = 1000000;  // изменение зарплаты сотрудника
+			//(employeesList.SelectedItem as Employee).Name = "НОВОИМЕННЫЙ";  // изменение имени сотрудника
+
+			//(organizationTree.SelectedItem as Department).refreshLocalBossSalary();
+			//(organizationTree.Items[0] as Organization).refreshDirAssDirSalary();
 
 		}
 	}

@@ -43,6 +43,7 @@ namespace OrganizationGUI.Classes
 			BirthDate = birthDate;
 			NamePost = namePost;
 			Salary = salary * 168;  // умножаем на 168 рабочих часов в месяце
+
 			Id = ++countWorker;
 		}
 

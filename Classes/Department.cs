@@ -244,37 +244,39 @@ namespace OrganizationGUI.Classes
 			departs.Add(dep);
 		}
 
-
-		private Worker returnWorkerById(int id)
+		/// <summary>
+		/// Вспомогательный метод, возвращает работника департамента по идентификатору
+		/// </summary>
+		/// <param name="id">Идентификатор работника</param>
+		/// <returns>Работник</returns>
+		private Worker returnWorkerDepById(int id)
 		{
 			return workers.Where(item => item.Id == id).First<Worker>();
 		}
 
-
-		////////////////////////////
-		//TODO: Сделать методы работы с департаментом (удаление, добавление нового), работы с сотрудниками (удаление, добавление нового, редактирование данных, перевод в другой департамент - ?)
-		/////////////////////////////
-		///
+		/// <summary>
+		/// Удаляет работника из департамента по идентификатору
+		/// </summary>
+		/// <param name="id">Идентификатор работника</param>
 		public void removeWorker(int id)
 		{
-			//workers.Remove(returnWorkerById(id));
-
-			OnPropertyChanged("LocalBossSalary");
-
-			//Employees.RemoveAt(1);
-			//Debug.WriteLine(returnWorkerById(id));
-
+			workers.Remove(returnWorkerDepById(id));
 			//workers.Add(new Employee("Шарап", "Сишарпов", new DateTime(1974, 6, 17), "Главный программист", 1_000));
+
+			refreshView();
+			refreshLocalBossSalary();
 		}
 
-		//public void refreshLocalBossSalary(int id)
-		//{
-		//	(returnWorkerById(id) as Employee).Salary = 1000000;
+		public void refreshView()
+		{
+			OnPropertyChanged("Employees");
+			OnPropertyChanged("CountEmployees");
+		}
 
-		//	OnPropertyChanged("LocalBossSalary");
-		//}
-
-
+		private void refreshLocalBossSalary()
+		{
+			OnPropertyChanged("LocalBossSalary");
+		}
 
 
 		/// <summary>
