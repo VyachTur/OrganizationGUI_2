@@ -25,13 +25,15 @@ namespace OrganizationGUI_2
 		{
 			InitializeComponent();
 
+			
+
 			#region Наполнение структуры организации из кода
 
-			ObservableCollection<Organization> orgs;
-			orgs = returnAnyOrganization();
+			//ObservableCollection<Organization> orgs;
+			//orgs = returnAnyOrganization();
 
-			organizationTree.ItemsSource = orgs;
-			DataContext = orgs[0];
+			//organizationTree.ItemsSource = orgs;
+			//DataContext = orgs[0];
 
 			#endregion    // Наполнение структуры организации из кода
 		}
@@ -117,6 +119,22 @@ namespace OrganizationGUI_2
 		}
 
 
+private void MenuItemDel_Click(object sender, RoutedEventArgs e)
+		{
+
+			(organizationTree.SelectedItem as Department).removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+
+		}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -128,6 +146,9 @@ namespace OrganizationGUI_2
 
 			Director director = Director.getInstance("Олег", "Важный", new DateTime(1961, 1, 1));
 			AssociateDirector assDirector = AssociateDirector.getInstance("Игорь", "Чутьменееважный", new DateTime(1962, 2, 2));
+
+			// Создание организации
+			Organization organization = new Organization("Организация", director, assDirector);
 
 
 			#region Департамент 1
@@ -148,7 +169,7 @@ namespace OrganizationGUI_2
 			workers1.Add(new Intern("Иван", "Непонимающий", new DateTime(1996, 8, 16), 50_000));
 
 			// Создание департамента 1
-			Department departament1 = new Department("Департамент 1", depBoss1, workers1);
+			Department departament1 = new Department("Департамент 1", depBoss1, workers1, organization);
 
 			#region Департамент 11
 
@@ -162,7 +183,7 @@ namespace OrganizationGUI_2
 			workers11.Add(new Employee("Федор", "Федоров", new DateTime(1975, 5, 8), "Инженер", 600));
 
 			// Создание департамента 11
-			Department departament11 = new Department("Департамент 11", depBoss11, workers11);
+			Department departament11 = new Department("Департамент 11", depBoss11, workers11, organization);
 
 			#endregion // Департамент 11
 
@@ -182,7 +203,7 @@ namespace OrganizationGUI_2
 			workers12.Add(new Intern("Василий", "Ябсделал", new DateTime(2000, 2, 26), 40_000));
 
 			// Создание департамента 12
-			Department departament12 = new Department("Департамент 12", depBoss12, workers12);
+			Department departament12 = new Department("Департамент 12", depBoss12, workers12, organization);
 
 			#region Департамент 121
 
@@ -196,7 +217,7 @@ namespace OrganizationGUI_2
 			workers121.Add(new Employee("Евгений", "Федоров", new DateTime(1972, 3, 30), "Инженер", 600));
 
 			// Создание департамента 121
-			Department departament121 = new Department("Департамент 121", depBoss121, workers121);
+			Department departament121 = new Department("Департамент 121", depBoss121, workers121, organization);
 
 
 			#endregion // Департамент 121
@@ -236,7 +257,7 @@ namespace OrganizationGUI_2
 			workers2.Add(new Intern("Платон", "Почемучин", new DateTime(1994, 11, 2), 50_000));
 
 			// Создание департамента 2
-			Department departament2 = new Department("Департамент 2", depBoss2, workers2);
+			Department departament2 = new Department("Департамент 2", depBoss2, workers2, organization);
 
 			#region Департамент 21
 
@@ -255,7 +276,7 @@ namespace OrganizationGUI_2
 			workers21.Add(new Intern("Василиса", "Немудрая", new DateTime(1997, 09, 12), 40_000));
 
 			// Создание департамента 21
-			Department departament21 = new Department("Департамент 21", depBoss21, workers21);
+			Department departament21 = new Department("Департамент 21", depBoss21, workers21, organization);
 
 			#region Департамент 211
 
@@ -273,7 +294,7 @@ namespace OrganizationGUI_2
 			workers211.Add(new Intern("Акакий", "Акаконов", new DateTime(1993, 11, 07), 40_000));
 
 			// Создание департамента 211
-			Department departament211 = new Department("Департамент 211", depBoss211, workers211);
+			Department departament211 = new Department("Департамент 211", depBoss211, workers211, organization);
 
 			#region Департамент 2111
 
@@ -287,7 +308,7 @@ namespace OrganizationGUI_2
 			workers2111.Add(new Intern("Юлия", "Июльская", new DateTime(1995, 11, 17), 40_000));
 
 			//Создание департамента 2111
-			Department departament2111 = new Department("Департамент 2111", depBoss2111, workers2111);
+			Department departament2111 = new Department("Департамент 2111", depBoss2111, workers2111, organization);
 
 			#endregion   // Департамент 2111
 
@@ -306,7 +327,7 @@ namespace OrganizationGUI_2
 			workers212.Add(new Employee("Евгений", "Федоров", new DateTime(1972, 03, 30), "Инженер", 600));
 
 			// Создание департамента 212
-			Department departament212 = new Department("Департамент 212", depBoss212, workers212);
+			Department departament212 = new Department("Департамент 212", depBoss212, workers212, organization);
 
 			#endregion    // Департамент 212
 
@@ -328,7 +349,7 @@ namespace OrganizationGUI_2
 			workers22.Add(new Intern("Николай", "Недумающий", new DateTime(1998, 07, 02), 40_000));
 
 			// Создание департамента 22
-			Department departament22 = new Department("Департамент 22", depBoss22, workers22);
+			Department departament22 = new Department("Департамент 22", depBoss22, workers22, organization);
 
 			#endregion    //	Департамент 22
 
@@ -344,7 +365,7 @@ namespace OrganizationGUI_2
 			workers23.Add(new Intern("Роман", "Ждущий", new DateTime(1995, 10, 27), 40_000));
 
 			// Создание департамента 23
-			Department departament23 = new Department("Департамент 23", depBoss23, workers23);
+			Department departament23 = new Department("Департамент 23", depBoss23, workers23, organization);
 
 			#region Департамента 231
 
@@ -357,7 +378,7 @@ namespace OrganizationGUI_2
 			workers231.Add(new Employee("Артур", "Молодой", new DateTime(1957, 12, 31), "Системный администратор", 550));
 
 			// Создание департамента 231
-			Department departament231 = new Department("Департамент 231", depBoss231, workers231);
+			Department departament231 = new Department("Департамент 231", depBoss231, workers231, organization);
 
 			#endregion // Департамента 231
 
@@ -374,7 +395,7 @@ namespace OrganizationGUI_2
 			workers232.Add(new Employee("Иван", "Иванов", new DateTime(1995, 10, 19), "Системный администратор", 550));
 
 			// Создание департамента 232
-			Department departament232 = new Department("Департамент 232", depBoss232, workers232);
+			Department departament232 = new Department("Департамент 232", depBoss232, workers232, organization);
 
 			#endregion
 
@@ -396,8 +417,7 @@ namespace OrganizationGUI_2
 			#endregion  // Департамент 2
 
 
-			// Создание организации
-			Organization organization = new Organization("Организация", director, assDirector);
+			// Добавление в организацию департаментов с их поддепартаментами
 			organization.addDepartment(departament1);
 			organization.addDepartment(departament2);
 
@@ -409,34 +429,5 @@ namespace OrganizationGUI_2
 
 		}
 
-		private void MenuItemDel_Click(object sender, RoutedEventArgs e)
-		{
-
-			(organizationTree.SelectedItem as Department).removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
-
-
-
-
-
-
-			//MessageBox.Show((organizationTree.Items[0] as Organization)?.returnWorkerOrgById(
-			//																			(organizationTree.SelectedItem as Department).Id,
-			//																			(employeesList.SelectedItem as Employee).Id
-			//																			).ToString()
-			//				);
-
-			//MessageBox.Show((organizationTree.Items[0] as Organization)?.returnDepartmentById(
-			//																			(organizationTree.SelectedItem as Department).Id
-			//																			).ToString()
-			//				);
-
-
-			//(employeesList.SelectedItem as Employee).Salary = 1000000;  // изменение зарплаты сотрудника
-			//(employeesList.SelectedItem as Employee).Name = "НОВОИМЕННЫЙ";  // изменение имени сотрудника
-
-			//(organizationTree.SelectedItem as Department).refreshLocalBossSalary();
-			//(organizationTree.Items[0] as Organization).refreshDirAssDirSalary();
-
-		}
 	}
 }

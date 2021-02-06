@@ -40,7 +40,17 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
-		/// Конструктор 1.1
+		/// Конструктор 1
+		/// </summary>
+		/// <param name="dep">Департамент</param>
+		public Organization(Department dep)
+		{
+			departments = new ObservableCollection<Department>();
+			departments.Add(dep);
+		}
+
+		/// <summary>
+		/// Конструктор 2.1
 		/// </summary>
 		/// <param name="name">Наименование организации</param>
 		/// <param name="director">Директор организации</param>
@@ -55,7 +65,7 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
-		/// Конструктор 1.2
+		/// Конструктор 2.2
 		/// </summary>
 		/// <param name="name">Наименование организации</param>
 		/// <param name="director">Директор организации</param>
@@ -76,7 +86,7 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Директор
 		/// </summary>
-		public Director Dir { get; private set; }
+		public Director Dir { get; set; }
 
 		/// <summary>
 		/// Заместитель директора
@@ -165,11 +175,11 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Обновление отображения зарплат директора и зам. директора
 		/// </summary>
-		public void refreshDirAssDirSalary()
-		{
-			OnPropertyChanged("DirSalary");
-			OnPropertyChanged("AssociateDirSalary");
-		}
+		//public void refreshDirAssDirSalary()
+		//{
+		//	OnPropertyChanged("DirSalary");
+		//	OnPropertyChanged("AssociateDirSalary");
+		//}
 
 		/// <summary>
 		/// Добавление департамента в коллекцию департаментов
@@ -242,6 +252,7 @@ namespace OrganizationGUI.Classes
 		/// Вспомогательный рекурсивный метод для сереализации департамента и его поддепартаментов
 		/// </summary>
 		/// <param name="dep">Департамент</param>
+		/// <param name="org">Организация</param>
 		/// <returns>XML-узел</returns>
 		private static XElement serializerSubDeps(Department dep)
 		{
@@ -265,7 +276,6 @@ namespace OrganizationGUI.Classes
 				XAttribute xaPOST_EMP = new XAttribute("empnamepost", emp.NamePost);
 				XAttribute xaSALARY_EMP = new XAttribute("empsalary", emp.Salary / 168);
 
-				//xeEMPLOYEE.Add(xaSALARY_EMP, xaPOST_EMP, xaBIRTHDATE_EMP, xaLASTNAME_EMP, xaNAME_EMP);
 				xeEMPLOYEE.Add(xaNAME_EMP, xaLASTNAME_EMP, xaBIRTHDATE_EMP, xaPOST_EMP, xaSALARY_EMP);
 
 				xeEMPLOYEES.Add(xeEMPLOYEE);
@@ -283,13 +293,11 @@ namespace OrganizationGUI.Classes
 				XAttribute xaBIRTHDATE_INTERN = new XAttribute("internbirth", intern.BirthDate);
 				XAttribute xaSALARY_INTERN = new XAttribute("internsalary", intern.Salary);
 
-				//xeINTERN.Add(xaSALARY_INTERN, xaBIRTHDATE_INTERN, xaLASTNAME_INTERN, xaNAME_INTERN);
 				xeINTERN.Add(xaNAME_INTERN, xaLASTNAME_INTERN, xaBIRTHDATE_INTERN, xaSALARY_INTERN);
 
 				xeINTERNS.Add(xeINTERN);
 			}
 
-			//xeDEPARTMENT.Add(xaBIRTHDATE_DEPBOSS, xaLASTNAME_DEPBOSS, xaNAME_DEPBOSS, xaNAME_DEP);
 			xeDEPARTMENT.Add(xaNAME_DEP, xaNAME_DEPBOSS, xaLASTNAME_DEPBOSS, xaBIRTHDATE_DEPBOSS);
 
 			xeDEPARTMENT.Add(xeEMPLOYEES);
@@ -351,8 +359,7 @@ namespace OrganizationGUI.Classes
 			// Цикл по департаментам в организации
 			foreach (var itemDepXml in colDepsXml)
 			{
-				Department dep = deserializerSubDeps(itemDepXml);
-
+				Department dep = deserializerSubDeps(itemDepXml, org);
 
 				org.addDepartment(dep); // добавляем созданный отдел в организацию
 			}
@@ -365,7 +372,7 @@ namespace OrganizationGUI.Classes
 		/// </summary>
 		/// <param name="xeDep">XML-узел</param>
 		/// <returns>Департамент с поддепартаментами</returns>
-		private static Department deserializerSubDeps(XElement xeDep)
+		private static Department deserializerSubDeps(XElement xeDep, Organization org)
 		{
 			DepBoss depBoss = new DepBoss(xeDep.Attribute("depbossname").Value,
 											xeDep.Attribute("depbosslastname").Value,
@@ -392,14 +399,14 @@ namespace OrganizationGUI.Classes
 											int.Parse(itemEmpXml.Attribute("internsalary").Value)));
 			}
 
-			Department dep = new Department(xeDep.Attribute("depname").Value, depBoss, workers);
+			Department dep = new Department(xeDep.Attribute("depname").Value, depBoss, workers, org);
 
 			if (xeDep.Element("DEPARTMENTS") != null)
 			{
 				foreach (var itemSubdepXml in xeDep.Element("DEPARTMENTS").Elements("DEPARTMENT").ToList())
 				{
 					// ПОДДЕПАРТАМЕНТЫ ДЕПАРТАМЕНТА
-					dep.addDepartment(deserializerSubDeps(itemSubdepXml));	// рекурсия
+					dep.addDepartment(deserializerSubDeps(itemSubdepXml, org));	// рекурсия
 				}
 			}
 

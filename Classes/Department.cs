@@ -47,13 +47,14 @@ namespace OrganizationGUI.Classes
 			Id = ++countDep;
 			workers = new ObservableCollection<Worker>();
 			departs = new ObservableCollection<Department>();
+			Org = new Organization();
 		}
 
 		/// <summary>
 		/// Конструктор 1
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
-		public Department(string name, DepBoss localBoss)
+		public Department(string name, DepBoss localBoss, Organization org)
 		{
 			Id = ++countDep;
 
@@ -62,15 +63,18 @@ namespace OrganizationGUI.Classes
 
 			workers = new ObservableCollection<Worker>();
 			departs = new ObservableCollection<Department>();
-
+			Org = org;
 		}
 
 		/// <summary>
 		/// Конструктор 2.1
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
-		/// <param name="workers">Работники департамента</param>
-		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departs, ObservableCollection<Worker> workers)
+		/// <param name="localBoss">Начальник департамента</param>
+		/// <param name="departs">Коллекция поддепартаментов</param>
+		/// <param name="workers">Коллекция работников департамента</param>
+		/// <param name="org">Организация включающая департамент</param>
+		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departs, ObservableCollection<Worker> workers, Organization org)
 		{
 			Id = ++countDep;
 
@@ -78,26 +82,51 @@ namespace OrganizationGUI.Classes
 			LocalBoss = localBoss;
 			this.workers = workers;
 			this.departs = departs;
-
+			Org = org;
 		}
 
 		/// <summary>
 		/// Конструктор 2.2
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
-		/// <param name="departs">Департаменты в текущем департаменте</param>
-		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departs)
-			: this(name, localBoss, departs, new ObservableCollection<Worker>()) { }
+		/// <param name="localBoss">Начальник департамента</param>
+		/// <param name="workers">Коллекция работников департамента</param>
+		/// <param name="org">Организация включающая департамент</param>
+		public Department(string name, DepBoss localBoss, ObservableCollection<Worker> workers, Organization org)
+			: this(name, localBoss, new ObservableCollection<Department>(), workers, org) { }
+
 
 		/// <summary>
-		/// Конструктор 2.3
+		/// Конструктор 3
+		/// </summary>
+		/// <param name="name">Наименование департамента</param>
+		/// <param name="departs">Департаменты в текущем департаменте</param>
+		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departs) 
+		{
+			Id = ++countDep;
+
+			Name = name;
+			LocalBoss = localBoss;
+			this.workers = new ObservableCollection<Worker>();
+			this.departs = departs;
+			Org = new Organization(this);
+		}
+
+		/// <summary>
+		/// Конструктор 4
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="workers"></param>
 		public Department(string name, DepBoss localBoss, ObservableCollection<Worker> workers)
-			: this(name, localBoss, new ObservableCollection<Department>(), workers) { }
+		{
+			Id = ++countDep;
 
-
+			Name = name;
+			LocalBoss = localBoss;
+			this.workers = workers;
+			this.departs = new ObservableCollection<Department>();
+			Org = new Organization(this);
+		}
 
 		#endregion // Constructors
 
@@ -118,6 +147,12 @@ namespace OrganizationGUI.Classes
 		/// Начальник департамента
 		/// </summary>
 		public DepBoss LocalBoss { get; private set; }
+
+		/// <summary>
+		/// Организация в которую входит департамент
+		/// </summary>
+		public Organization Org { get; private set; }
+
 
 		/// <summary>
 		/// Возвращает коллекцию поддепартаментов
@@ -264,17 +299,34 @@ namespace OrganizationGUI.Classes
 
 			refreshView();
 			refreshLocalBossSalary();
+			refreshBigBossSalary();
 		}
 
+
+		/// <summary>
+		/// Обновление интерфейса для свойств Employees и CountEmployees
+		/// </summary>
 		public void refreshView()
 		{
 			OnPropertyChanged("Employees");
 			OnPropertyChanged("CountEmployees");
 		}
 
+		/// <summary>
+		/// Обновление интерфейса для свойства LocalBossSalary
+		/// </summary>
 		private void refreshLocalBossSalary()
 		{
 			OnPropertyChanged("LocalBossSalary");
+		}
+
+		/// <summary>
+		/// Обновление интерфейса для свойств в организации DirSalary и AssociateDirSalary
+		/// </summary>
+		private void refreshBigBossSalary()
+		{
+			Org.OnPropertyChanged("DirSalary");
+			Org.OnPropertyChanged("AssociateDirSalary");
 		}
 
 
