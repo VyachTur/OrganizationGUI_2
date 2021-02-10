@@ -54,91 +54,12 @@
 			</MenuItem>
 			<MenuItem Header="Редактирование">
 				<MenuItem Header="Сортировать работников">
-					<MenuItem>
-						<MenuItem.Template>
-							<ControlTemplate>
-								<RadioButton
-									Margin="7,0,0,0"
-									Padding="14,0,0,0"
-									VerticalContentAlignment="Center"
-									GroupName="sort"
-									IsChecked="True">
-									По Id
-								</RadioButton>
-							</ControlTemplate>
-						</MenuItem.Template>
-					</MenuItem>
-
-					<MenuItem>
-						<MenuItem.Template>
-							<ControlTemplate>
-								<RadioButton
-									Margin="7,0,0,0"
-									Padding="14,0,0,0"
-									VerticalContentAlignment="Center"
-									GroupName="sort">
-									По возрасту
-								</RadioButton>
-							</ControlTemplate>
-						</MenuItem.Template>
-					</MenuItem>
-
-					<MenuItem>
-						<MenuItem.Template>
-							<ControlTemplate>
-								<RadioButton
-									Margin="7,0,0,0"
-									Padding="14,0,0,0"
-									VerticalContentAlignment="Center"
-									GroupName="sort">
-									По имени
-								</RadioButton>
-							</ControlTemplate>
-						</MenuItem.Template>
-					</MenuItem>
-
-					<MenuItem>
-						<MenuItem.Template>
-							<ControlTemplate>
-								<RadioButton
-									Margin="7,0,0,0"
-									Padding="14,0,0,0"
-									VerticalContentAlignment="Center"
-									GroupName="sort">
-									По фамилии
-								</RadioButton>
-							</ControlTemplate>
-						</MenuItem.Template>
-					</MenuItem>
-
-					<MenuItem>
-						<MenuItem.Template>
-							<ControlTemplate>
-								<RadioButton
-									Margin="7,0,0,0"
-									Padding="14,0,0,0"
-									VerticalContentAlignment="Center"
-									GroupName="sort">
-									По имени и фамилии
-								</RadioButton>
-							</ControlTemplate>
-						</MenuItem.Template>
-					</MenuItem>
-
-					<MenuItem>
-						<MenuItem.Template>
-							<ControlTemplate>
-								<RadioButton
-									Margin="7,0,0,0"
-									Padding="14,0,0,0"
-									VerticalContentAlignment="Center"
-									GroupName="sort">
-									По фамилии и имени
-								</RadioButton>
-							</ControlTemplate>
-						</MenuItem.Template>
-					</MenuItem>
-
+					<MenuItem Click="MenuSortById_Click" Header="По Id" />
+					<MenuItem Click="MenuSortByAge_Click" Header="По возрасту" />
+					<MenuItem Click="MenuSortByName_Click" Header="По имени" />
+					<MenuItem Click="MenuSortByLName_Click" Header="По фамилии" />
+					<MenuItem Click="MenuSortByNameAndLName_Click" Header="По имени и фамилии" />
+					<MenuItem Click="MenuSortByLNameAndName_Click" Header="По фамилии и имени" />
 				</MenuItem>
 				<Separator />
 				<MenuItem Header="Управление департаментами и сотрудниками" />
@@ -199,10 +120,15 @@
 			Margin="5,0,15,5"
 			FontSize="16">
 			<TreeView.ItemTemplate>
-				<HierarchicalDataTemplate ItemsSource="{Binding Path=Departs}">
+				<HierarchicalDataTemplate ItemsSource="{Binding Path=Departments}">
 					<TextBlock Text="{Binding Name}" />
 				</HierarchicalDataTemplate>
 			</TreeView.ItemTemplate>
+			<TreeView.ContextMenu>
+				<ContextMenu>
+					<MenuItem Click="MenuItemTreeViewDel_Click" Header="Удалить" />
+				</ContextMenu>
+			</TreeView.ContextMenu>
 		</TreeView>
 
 		<Border
@@ -256,7 +182,8 @@
 					x:Name="employeesList"
 					Grid.Row="3"
 					Margin="5,0,5,0"
-					ItemsSource="{Binding ElementName=organizationTree, Path=SelectedItem.Employees}">
+					ItemsSource="{Binding ElementName=organizationTree, Path=SelectedItem.Employees}"
+					LostFocus="employeesList_LostFocus">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Vertical">
@@ -296,7 +223,7 @@
 					</ListView.ItemTemplate>
 					<ListView.ContextMenu>
 						<ContextMenu>
-							<MenuItem Click="MenuItemDel_Click" Header="Удалить" />
+							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>
@@ -317,7 +244,8 @@
 					x:Name="internsList"
 					Grid.Row="6"
 					Margin="5,0,5,0"
-					ItemsSource="{Binding ElementName=organizationTree, Path=SelectedItem.Interns}">
+					ItemsSource="{Binding ElementName=organizationTree, Path=SelectedItem.Interns}"
+					LostFocus="internsList_LostFocus">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Vertical">
@@ -350,7 +278,7 @@
 					</ListView.ItemTemplate>
 					<ListView.ContextMenu>
 						<ContextMenu>
-							<MenuItem Header="Удалить" />
+							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>

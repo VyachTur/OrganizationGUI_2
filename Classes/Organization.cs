@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace OrganizationGUI.Classes
 {
@@ -96,7 +97,7 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Возвращает коллекцию департаментов в организации
 		/// </summary>
-		public ObservableCollection<Department> Departs
+		public ObservableCollection<Department> Departments
 		{
 			get
 			{
@@ -151,7 +152,7 @@ namespace OrganizationGUI.Classes
 
 		#endregion  // Properties
 
-		
+
 
 
 		#region Methods
@@ -164,7 +165,7 @@ namespace OrganizationGUI.Classes
 		{
 			double sum = 0;
 
-			foreach (var dep in Departs)
+			foreach (var dep in Departments)
 			{
 				sum += dep.salaryDepWorkers() + dep.LocalBossSalary;
 			}
@@ -172,14 +173,6 @@ namespace OrganizationGUI.Classes
 			return sum;
 		}
 
-		/// <summary>
-		/// Обновление отображения зарплат директора и зам. директора
-		/// </summary>
-		//public void refreshDirAssDirSalary()
-		//{
-		//	OnPropertyChanged("DirSalary");
-		//	OnPropertyChanged("AssociateDirSalary");
-		//}
 
 		/// <summary>
 		/// Добавление департамента в коллекцию департаментов
@@ -191,11 +184,44 @@ namespace OrganizationGUI.Classes
 		}
 
 
+		/// <summary>
+		/// Удаление департамента
+		/// </summary>
+		/// <param name="dep">Департамент</param>
+		public void removeDepartment(Department dep)
+		{
+			Organization.returnIncludeDepCollection(Departments, dep).Remove(dep);
 
-		////////////////////////////
-		//TODO: Сделать методы работы с департаментом (удаление, добавление нового)
-		/////////////////////////////
-		///
+			// Обновляем интерфейс (зарплаты главных начальников)
+			OnPropertyChanged("DirSalary");
+			OnPropertyChanged("AssociateDirSalary");
+		}
+
+		/// <summary>
+		/// Вспомогательный метод. Возвращает коллекцию в которой находится департамент
+		/// </summary>
+		/// <param name="deps">Коллекция в которой ищем департамент</param>
+		/// <param name="dep">Искомый департамент</param>
+		/// <returns></returns>
+		private static ObservableCollection<Department> returnIncludeDepCollection(ObservableCollection<Department> deps, Department dep)
+		{
+			// Вспомогательная коллекция
+			ObservableCollection<Department> departs = new ObservableCollection<Department>();
+
+			// Если департамент есть в коллекции, то возвращаем эту коллекцию
+			if (deps.Contains(dep))
+			{
+				return deps;
+			}
+
+			for (int i = 0; i < deps.Count; ++i)
+			{
+				// Если departs не содержит элементов, то "ищем" дальше
+				if (departs.Count == 0) departs = returnIncludeDepCollection(deps[i].Departments, dep);
+			}
+
+			return departs;
+		}
 
 
 
@@ -235,7 +261,7 @@ namespace OrganizationGUI.Classes
 			// ДЕПАРТАМЕНТЫ ОРГАНИЗАЦИИ
 			XElement xeDEPARTMENTS = new XElement("DEPARTMENTS");
 
-			foreach (Department dep in Departs)
+			foreach (Department dep in departments)
 			{
 				XElement xeDEPARTMENT = serializerSubDeps(dep);
 
@@ -303,12 +329,12 @@ namespace OrganizationGUI.Classes
 			xeDEPARTMENT.Add(xeEMPLOYEES);
 			xeDEPARTMENT.Add(xeINTERNS);
 
-			if (dep.CountDeparts > 0)
+			if (dep.CountDepartments > 0)
 			{
 				// ПОДДЕПАРТАМЕНТЫ ДЕПАРТАМЕНТА
 				XElement xeSUBDEPARTMENTS = new XElement("DEPARTMENTS");
 
-				foreach (Department department in dep.Departs)
+				foreach (Department department in dep.Departments)
 				{
 					XElement xeDEP = serializerSubDeps(department);	// рекурсия
 

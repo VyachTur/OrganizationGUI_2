@@ -25,15 +25,15 @@ namespace OrganizationGUI_2
 		{
 			InitializeComponent();
 
-			
+
 
 			#region Наполнение структуры организации из кода
 
-			//ObservableCollection<Organization> orgs;
-			//orgs = returnAnyOrganization();
+			ObservableCollection<Organization> orgs;
+			orgs = returnAnyOrganization();
 
-			//organizationTree.ItemsSource = orgs;
-			//DataContext = orgs[0];
+			organizationTree.ItemsSource = orgs;
+			DataContext = orgs[0];
 
 			#endregion    // Наполнение структуры организации из кода
 		}
@@ -119,19 +119,124 @@ namespace OrganizationGUI_2
 		}
 
 
-private void MenuItemDel_Click(object sender, RoutedEventArgs e)
-		{
 
-			(organizationTree.SelectedItem as Department).removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+		/// <summary>
+		/// Обработчик контекстного меню "Удаление" работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuItemWorkListDel_Click(object sender, RoutedEventArgs e)
+		{
+			if (employeesList.SelectedItem != null)
+			{
+				(organizationTree.SelectedItem as Department)?
+						.removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+			}
+
+			if (internsList.SelectedItem != null)
+			{
+				(organizationTree.SelectedItem as Department)?
+						.removeWorker((internsList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+			}
 
 		}
 
+		/// <summary>
+		/// Обработчик контекстного меню "Удаление" департамента
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuItemTreeViewDel_Click(object sender, RoutedEventArgs e)
+		{
+			//Debug.WriteLine(DataContext.GetType());
+			(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
+		}
 
 
+		/// <summary>
+		/// При потере фокуса снимаем выделение элемента
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void employeesList_LostFocus(object sender, RoutedEventArgs e)
+		{
+			employeesList.UnselectAll();
+		}
+
+		/// <summary>
+		/// При потере фокуса снимаем выделение элемента
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void internsList_LostFocus(object sender, RoutedEventArgs e)
+		{
+			internsList.UnselectAll();
+		}
 
 
+		#region Обработчики меню сортировки
 
+		/// <summary>
+		/// Сортировка по возрасту работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuSortByAge_Click(object sender, RoutedEventArgs e)
+		{
+			(organizationTree.SelectedItem as Department)?.sortedWorkers(Department.FIELDSORT.AGE);
+		}
 
+		/// <summary>
+		/// Сортировка по Id работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuSortById_Click(object sender, RoutedEventArgs e)
+		{
+			(organizationTree.SelectedItem as Department)?.sortedWorkers();
+		}
+
+		/// <summary>
+		/// Сортировка по имени работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuSortByName_Click(object sender, RoutedEventArgs e)
+		{
+			(organizationTree.SelectedItem as Department)?.sortedWorkers(Department.FIELDSORT.NAME);
+		}
+
+		/// <summary>
+		/// Сортировка по фамилии работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuSortByLName_Click(object sender, RoutedEventArgs e)
+		{
+			(organizationTree.SelectedItem as Department)?.sortedWorkers(Department.FIELDSORT.LNAME);
+		}
+
+		/// <summary>
+		/// Сортировка сначала по имени потом по фамилии работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuSortByNameAndLName_Click(object sender, RoutedEventArgs e)
+		{
+			(organizationTree.SelectedItem as Department)?.sortedWorkers(Department.FIELDSORT.NAME_LNAME);
+		}
+
+		/// <summary>
+		/// Сортировка сначала по фамилии потом по имени работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuSortByLNameAndName_Click(object sender, RoutedEventArgs e)
+		{
+			(organizationTree.SelectedItem as Department)?.sortedWorkers(Department.FIELDSORT.LNAME_NAME);
+		}
+
+		#endregion // Обработчики меню сортировки
 
 
 
@@ -429,5 +534,7 @@ private void MenuItemDel_Click(object sender, RoutedEventArgs e)
 
 		}
 
+
+		
 	}
 }

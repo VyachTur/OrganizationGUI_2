@@ -46,7 +46,7 @@ namespace OrganizationGUI.Classes
 		{
 			Id = ++countDep;
 			workers = new ObservableCollection<Worker>();
-			departs = new ObservableCollection<Department>();
+			departments = new ObservableCollection<Department>();
 			Org = new Organization();
 		}
 
@@ -62,7 +62,7 @@ namespace OrganizationGUI.Classes
 			LocalBoss = localBoss;
 
 			workers = new ObservableCollection<Worker>();
-			departs = new ObservableCollection<Department>();
+			departments = new ObservableCollection<Department>();
 			Org = org;
 		}
 
@@ -71,17 +71,17 @@ namespace OrganizationGUI.Classes
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
 		/// <param name="localBoss">Начальник департамента</param>
-		/// <param name="departs">Коллекция поддепартаментов</param>
+		/// <param name="departments">Коллекция поддепартаментов</param>
 		/// <param name="workers">Коллекция работников департамента</param>
 		/// <param name="org">Организация включающая департамент</param>
-		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departs, ObservableCollection<Worker> workers, Organization org)
+		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departments, ObservableCollection<Worker> workers, Organization org)
 		{
 			Id = ++countDep;
 
 			Name = name;
 			LocalBoss = localBoss;
 			this.workers = workers;
-			this.departs = departs;
+			this.departments = departments;
 			Org = org;
 		}
 
@@ -100,15 +100,15 @@ namespace OrganizationGUI.Classes
 		/// Конструктор 3
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
-		/// <param name="departs">Департаменты в текущем департаменте</param>
-		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departs) 
+		/// <param name="departments">Департаменты в текущем департаменте</param>
+		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departments) 
 		{
 			Id = ++countDep;
 
 			Name = name;
 			LocalBoss = localBoss;
 			this.workers = new ObservableCollection<Worker>();
-			this.departs = departs;
+			this.departments = departments;
 			Org = new Organization(this);
 		}
 
@@ -124,7 +124,7 @@ namespace OrganizationGUI.Classes
 			Name = name;
 			LocalBoss = localBoss;
 			this.workers = workers;
-			this.departs = new ObservableCollection<Department>();
+			this.departments = new ObservableCollection<Department>();
 			Org = new Organization(this);
 		}
 
@@ -157,11 +157,11 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Возвращает коллекцию поддепартаментов
 		/// </summary>
-		public ObservableCollection<Department> Departs
+		public ObservableCollection<Department> Departments
 		{
 			get
 			{
-				return departs ?? new ObservableCollection<Department>();
+				return departments ?? new ObservableCollection<Department>();
 			}
 		}
 
@@ -257,11 +257,11 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Количество поддепартаментов в департаменте
 		/// </summary>
-		public int CountDeparts
+		public int CountDepartments
 		{
 			get
 			{
-				return Departs.Count;
+				return Departments.Count;
 			}
 		}
 
@@ -276,18 +276,32 @@ namespace OrganizationGUI.Classes
 		/// <param name="dep">Департамент</param>
 		public void addDepartment(Department dep)
 		{
-			departs.Add(dep);
+			departments.Add(dep);
 		}
 
+
 		/// <summary>
-		/// Вспомогательный метод, возвращает работника департамента по идентификатору
+		/// Удаление департамента
 		/// </summary>
-		/// <param name="id">Идентификатор работника</param>
-		/// <returns>Работник</returns>
-		private Worker returnWorkerDepById(int id)
-		{
-			return workers.Where(item => item.Id == id).First<Worker>();
-		}
+		/// <param name="dep">Департамент</param>
+		//public void removeDepartment(Department dep)
+		//{
+		//	// Если департамент есть в коллекции, то удаляем его
+		//	if (departments.Contains(dep)) departments.Remove(dep);
+		//}
+
+		/// <summary>
+		/// Удаление департамента (перегруженный метод)
+		/// </summary>
+		/// <param name="id">Идентификатор департамента</param>
+		//public void removeDepartment(int id)
+		//{
+		//	// Если департамент с нужным id есть в коллекции, то удаляем его
+		//	if (departments.Contains(departments.ToList().Find(item => item.Id == id)))
+		//						departments.Remove(departments.ToList().Find(item => item.Id == id));
+		//}
+
+		
 
 		/// <summary>
 		/// Удаляет работника из департамента по идентификатору
@@ -302,12 +316,26 @@ namespace OrganizationGUI.Classes
 			refreshBigBossSalary();
 		}
 
+		/// <summary>
+		/// Вспомогательный метод, возвращает работника департамента по идентификатору
+		/// </summary>
+		/// <param name="id">Идентификатор работника</param>
+		/// <returns>Работник</returns>
+		private Worker returnWorkerDepById(int id)
+		{
+			return workers.Where(item => item.Id == id).First<Worker>();
+		}
+
+
 
 		/// <summary>
 		/// Обновление интерфейса для свойств Employees и CountEmployees
+		/// Interns и CountInterns
 		/// </summary>
 		public void refreshView()
 		{
+			OnPropertyChanged("Interns");
+			OnPropertyChanged("CountInterns");
 			OnPropertyChanged("Employees");
 			OnPropertyChanged("CountEmployees");
 		}
@@ -336,13 +364,13 @@ namespace OrganizationGUI.Classes
 		/// <returns>Сумма зарплат</returns>
 		public double salaryDepWorkers()
 		{
-			int indexDepartment = Departs.Count;    // количество поддепартаментов
+			int indexDepartment = CountDepartments;    // количество поддепартаментов
 			double sum = salarySumWorkers();
 
 			for (int i = 0; i < indexDepartment; ++i)
 			{
 				// Зарплаты начальников поддепартаментов и остальных работников поддепартамента (рекурсия)
-				sum += Departs[i].LocalBossSalary + Departs[i].salaryDepWorkers();
+				sum += Departments[i].LocalBossSalary + Departments[i].salaryDepWorkers();
 			}
 
 			return sum;
@@ -378,36 +406,42 @@ namespace OrganizationGUI.Classes
 		///                                             FIELDSORT.NAME_LNAME - сначала по имени, потом по фамилии,
 		///                                             FIELDSORT.LNAME_NAME - сначала по фамилии, потом по имени</param>
 		/// <returns>Коллекция работников, отсортированных по выбранному критерию</returns>
-		private ObservableCollection<Worker> getSortWorkers(FIELDSORT critSort = FIELDSORT.ID)
+		public void sortedWorkers(FIELDSORT critSort = FIELDSORT.ID)
 		{
 			switch (critSort)
 			{
 				case FIELDSORT.ID:
 					// Сортируем всех работников по идентификатору
-					return new ObservableCollection<Worker>(workers.OrderBy(item => item.Id).ToList());
+					workers = new ObservableCollection<Worker>(workers.OrderBy(item => item.Id).ToList());
+					break;
 
 				case FIELDSORT.AGE:
 					// Сортируем всех работников по возрасту
-					return new ObservableCollection<Worker>(workers.OrderBy(item => item.Age).ToList());
+					workers = new ObservableCollection<Worker>(workers.OrderBy(item => item.Age).ToList());
+					break;
 
 				case FIELDSORT.NAME:
 					// Сортируем всех работников по имени
-					return new ObservableCollection<Worker>(workers.OrderBy(item => item.Name).ToList());
+					workers = new ObservableCollection<Worker>(workers.OrderBy(item => item.Name).ToList());
+					break;
 
 				case FIELDSORT.LNAME:
 					// Сортируем всех работников по фамилии
-					return new ObservableCollection<Worker>(workers.OrderBy(item => item.LastName).ToList());
+					workers = new ObservableCollection<Worker>(workers.OrderBy(item => item.LastName).ToList());
+					break;
 
 				case FIELDSORT.NAME_LNAME:
 					// Сортируем всех работников по имени и фамилии
-					return new ObservableCollection<Worker>(workers.OrderBy(item => item.Name).ThenBy(item => item.LastName).ToList());
+					workers = new ObservableCollection<Worker>(workers.OrderBy(item => item.Name).ThenBy(item => item.LastName).ToList());
+					break;
 
 				case FIELDSORT.LNAME_NAME:
 					// Сортируем всех работников по фамилии и имени
-					return new ObservableCollection<Worker>(workers.OrderBy(item => item.LastName).ThenBy(item => item.Name).ToList());
+					workers = new ObservableCollection<Worker>(workers.OrderBy(item => item.LastName).ThenBy(item => item.Name).ToList());
+					break;
 			}
 
-			return new ObservableCollection<Worker>();
+			refreshView();	// обновляем интерфейс после сортировки
 		}
 
 		#endregion	// Sorting
@@ -422,7 +456,7 @@ namespace OrganizationGUI.Classes
 			return $"| Идентификатор отдела: { Id } | " +
 					$"Название отдела: { Name } | " +
 					$"Количество сотрудников: { CountEmployees } | " +
-					$"Количество поддепартаментов: { CountDeparts } |";
+					$"Количество поддепартаментов: { CountDepartments } |";
 		}
 
 		#endregion // Methods
@@ -430,10 +464,10 @@ namespace OrganizationGUI.Classes
 
 		#region Fields
 
-		private ObservableCollection<Worker> workers;       // работники департамента
-		private ObservableCollection<Department> departs;   // "поддепартаменты"
+		private ObservableCollection<Worker> workers;			// работники департамента
+		private ObservableCollection<Department> departments;   // "поддепартаменты"
 
-		private static int countDep = 0;                      // счетчик для идентификатора департамента
+		private static int countDep = 0;						// счетчик для идентификатора департамента
 
 		#endregion // Fields
 
