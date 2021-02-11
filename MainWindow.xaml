@@ -10,7 +10,8 @@
 	Height="550"
 	MinWidth="670"
 	MinHeight="450"
-	mc:Ignorable="d">
+	mc:Ignorable="d"
+	MouseLeftButtonDown="MainWindow_MouseLeftButtonDown">
 
 	<Window.Resources>
 		<Style TargetType="Border">
@@ -62,7 +63,7 @@
 					<MenuItem Click="MenuSortByLNameAndName_Click" Header="По фамилии и имени" />
 				</MenuItem>
 				<Separator />
-				<MenuItem Header="Управление департаментами и сотрудниками" />
+				<MenuItem Click="MenuItemEdit_Click" Header="Управление департаментами и сотрудниками" />
 			</MenuItem>
 		</Menu>
 
@@ -126,7 +127,7 @@
 			</TreeView.ItemTemplate>
 			<TreeView.ContextMenu>
 				<ContextMenu>
-					<MenuItem Click="MenuItemTreeViewDel_Click" Header="Удалить" />
+					<MenuItem Click="MenuItemTreeViewDelDep_Click" Header="Удалить департамент" />
 				</ContextMenu>
 			</TreeView.ContextMenu>
 		</TreeView>
@@ -223,7 +224,7 @@
 					</ListView.ItemTemplate>
 					<ListView.ContextMenu>
 						<ContextMenu>
-							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить" />
+							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить сотрудника" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>
@@ -278,7 +279,7 @@
 					</ListView.ItemTemplate>
 					<ListView.ContextMenu>
 						<ContextMenu>
-							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить" />
+							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить интерна" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>

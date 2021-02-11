@@ -21,6 +21,8 @@ namespace OrganizationGUI_2
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		Window wndEdit;	// окно для редактирования информации о департаментах и сотрудниках
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -39,6 +41,7 @@ namespace OrganizationGUI_2
 		}
 
 
+		#region Меню "Файл"
 
 		/// <summary>
 		/// Выгрузка (сериализация) структуры организации (обработчик на нажатие меню "Выгрузить")
@@ -118,63 +121,12 @@ namespace OrganizationGUI_2
 			this.Close();
 		}
 
+		#endregion
 
 
-		/// <summary>
-		/// Обработчик контекстного меню "Удаление" работника
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void MenuItemWorkListDel_Click(object sender, RoutedEventArgs e)
-		{
-			if (employeesList.SelectedItem != null)
-			{
-				(organizationTree.SelectedItem as Department)?
-						.removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
-			}
+		#region Меню "Редактирование"
 
-			if (internsList.SelectedItem != null)
-			{
-				(organizationTree.SelectedItem as Department)?
-						.removeWorker((internsList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
-			}
-
-		}
-
-		/// <summary>
-		/// Обработчик контекстного меню "Удаление" департамента
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void MenuItemTreeViewDel_Click(object sender, RoutedEventArgs e)
-		{
-			//Debug.WriteLine(DataContext.GetType());
-			(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
-		}
-
-
-		/// <summary>
-		/// При потере фокуса снимаем выделение элемента
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void employeesList_LostFocus(object sender, RoutedEventArgs e)
-		{
-			employeesList.UnselectAll();
-		}
-
-		/// <summary>
-		/// При потере фокуса снимаем выделение элемента
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void internsList_LostFocus(object sender, RoutedEventArgs e)
-		{
-			internsList.UnselectAll();
-		}
-
-
-		#region Обработчики меню сортировки
+		#region Обработчики подменю "Сортировать работников"
 
 		/// <summary>
 		/// Сортировка по возрасту работника
@@ -239,13 +191,112 @@ namespace OrganizationGUI_2
 		#endregion // Обработчики меню сортировки
 
 
+		#region Обработчики подменю "Управление департаментами и сотрудниками"
+
+		/// <summary>
+		/// Обработчик контекстного меню "Добавление сотрудника"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void AddEmp_Click(object sender, RoutedEventArgs e)
+		{
+			Debug.WriteLine("Добавляем сотрудника");
+
+		}
+
+		/// <summary>
+		/// Обработчик контекстного меню "Добавление интерна"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void AddIntern_Click(object sender, RoutedEventArgs e)
+		{
+			Debug.WriteLine("Добавляем интерна");
+
+		}
+
+		/// <summary>
+		/// Обработчик контекстного меню "Добавление департамента"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void AddDep_Click(object sender, RoutedEventArgs e)
+		{
+			Debug.WriteLine("Добавляем департамент");
+			//(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
+		}
+
+		#endregion // Обработчики подменю "Управление департаментами и сотрудниками"
+
+
+		#endregion // Меню "Редактирование"
+
+
+
+		#region Контекстные меню
+
+		/// <summary>
+		/// Обработчик контекстного меню "Удаление" работника
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuItemWorkListDel_Click(object sender, RoutedEventArgs e)
+		{
+			if (employeesList.SelectedItem != null)
+			{
+				(organizationTree.SelectedItem as Department)?
+						.removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+			}
+
+			if (internsList.SelectedItem != null)
+			{
+				(organizationTree.SelectedItem as Department)?
+						.removeWorker((internsList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+			}
+
+		}
+
+		/// <summary>
+		/// Обработчик контекстного меню "Удаление департамента"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MenuItemTreeViewDelDep_Click(object sender, RoutedEventArgs e)
+		{
+			(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
+		}
+
+
+
+		/// <summary>
+		/// При потере фокуса снимаем выделение элемента
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void employeesList_LostFocus(object sender, RoutedEventArgs e)
+		{
+			employeesList.UnselectAll();
+		}
+
+		/// <summary>
+		/// При потере фокуса снимаем выделение элемента
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void internsList_LostFocus(object sender, RoutedEventArgs e)
+		{
+			internsList.UnselectAll();
+		}
+
+		#endregion	// Контекстные меню
 
 
 
 
 		/// <summary>
-		/// Наполнение структуры организации (департаментами и сотрудниками)
+		/// Наполняет структуру организации
 		/// </summary>
+		/// <returns>Организация</returns>
 		private ObservableCollection<Organization> returnAnyOrganization()
 		{
 
@@ -535,6 +586,28 @@ namespace OrganizationGUI_2
 		}
 
 
-		
+
+
+		/// <summary>
+		/// Перемещение главного окна за любую его часть
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MainWindow_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			DragMove();
+		}
+
+
+
+		private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
+		{
+			
+			wndEdit = new EditWindow(); // создаем новое окно для редактирования
+			wndEdit.Owner = this;		// назначаем родительским окном - главное окно (MainWindow)
+			
+			wndEdit.Show();	// отображаем окно редактирования
+			Hide();			// скрываем главное окно
+		}
 	}
 }
