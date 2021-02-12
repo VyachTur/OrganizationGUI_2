@@ -54,6 +54,25 @@ namespace OrganizationGUI.Classes
 		/// Конструктор 1
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
+		/// <param name="org">Организация включающая департамент</param>
+		public Department(string name, Organization org)
+		{
+			Id = ++countDep;
+
+			Name = name;
+			LocalBoss = new DepBoss();
+			workers = new ObservableCollection<Worker>();
+			departments = new ObservableCollection<Department>();
+
+			Org = org;
+		}
+
+		/// <summary>
+		/// Конструктор 2
+		/// </summary>
+		/// <param name="name">Наименование департамента</param>
+		/// <param name="localBoss">Начальник департамента</param>
+		/// <param name="org">Организация включающая департамент</param>
 		public Department(string name, DepBoss localBoss, Organization org)
 		{
 			Id = ++countDep;
@@ -67,7 +86,7 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
-		/// Конструктор 2.1
+		/// Конструктор 3.1
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
 		/// <param name="localBoss">Начальник департамента</param>
@@ -86,7 +105,7 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
-		/// Конструктор 2.2
+		/// Конструктор 3.2
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
 		/// <param name="localBoss">Начальник департамента</param>
@@ -97,7 +116,7 @@ namespace OrganizationGUI.Classes
 
 
 		/// <summary>
-		/// Конструктор 3
+		/// Конструктор 4
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
 		/// <param name="departments">Департаменты в текущем департаменте</param>
@@ -113,7 +132,7 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
-		/// Конструктор 4
+		/// Конструктор 5
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="workers"></param>
@@ -141,12 +160,12 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Название департамента
 		/// </summary>
-		public string Name { get; private set; }
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Начальник департамента
 		/// </summary>
-		public DepBoss LocalBoss { get; private set; }
+		public DepBoss LocalBoss { get; set; }
 
 		/// <summary>
 		/// Организация в которую входит департамент
@@ -247,10 +266,18 @@ namespace OrganizationGUI.Classes
 		{
 			get
 			{
-				double salary = salaryDepWorkers() * 0.15;
-				salary = Math.Round(salary);    // округляем до целых
+				if (LocalBoss.Name != null) 
+				{ 
+					double salary = salaryDepWorkers() * 0.15;
+					salary = Math.Round(salary);    // округляем до целых
 
-				return (salary < 160_000) ? 160_000 : salary;
+					return (salary < 160_000) ? 160_000 : salary;
+				}
+				else
+				{
+					return 0;
+				}
+
 			}
 		}
 
@@ -277,6 +304,23 @@ namespace OrganizationGUI.Classes
 		public void addDepartment(Department dep)
 		{
 			departments.Add(dep);
+
+			refreshView();
+			refreshLocalBossSalary();
+			refreshBigBossSalary();
+		}
+
+		/// <summary>
+		/// Добавление работника в коллекцию работников
+		/// </summary>
+		/// <param name="worker">Работник</param>
+		public void addWorker(Worker worker)
+		{
+			workers.Add(worker);
+
+			refreshView();
+			refreshLocalBossSalary();
+			refreshBigBossSalary();
 		}
 
 

@@ -26,7 +26,11 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Конструктор по умолчанию
 		/// </summary>
-		public DepBoss() { Id = ++countWorker; }
+		public DepBoss() 
+		{ 
+			Id = ++countWorker;
+			BirthDate = DateTime.Now;	// для корректного отображения возраста (костыль)
+		}
 
 		/// <summary>
 		/// Конструктор

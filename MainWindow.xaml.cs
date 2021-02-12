@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.IO;
+using System.Windows.Controls;
 
 namespace OrganizationGUI_2
 {
@@ -21,7 +22,6 @@ namespace OrganizationGUI_2
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		Window wndEdit;	// окно для редактирования информации о департаментах и сотрудниках
 
 		public MainWindow()
 		{
@@ -32,10 +32,14 @@ namespace OrganizationGUI_2
 			#region Наполнение структуры организации из кода
 
 			ObservableCollection<Organization> orgs;
-			orgs = returnAnyOrganization();
+			orgs = returnAnyOrganizationCollection();
 
 			organizationTree.ItemsSource = orgs;
 			DataContext = orgs[0];
+
+			//ObservableCollection<Department> deps = orgs[0].AllDepartments;
+
+			//int i = 1 + 1;
 
 			#endregion    // Наполнение структуры организации из кода
 		}
@@ -124,9 +128,7 @@ namespace OrganizationGUI_2
 		#endregion
 
 
-		#region Меню "Редактирование"
-
-		#region Обработчики подменю "Сортировать работников"
+		#region Меню "Сортировать работников"
 
 		/// <summary>
 		/// Сортировка по возрасту работника
@@ -191,81 +193,120 @@ namespace OrganizationGUI_2
 		#endregion // Обработчики меню сортировки
 
 
-		#region Обработчики подменю "Управление департаментами и сотрудниками"
-
-		/// <summary>
-		/// Обработчик контекстного меню "Добавление сотрудника"
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void AddEmp_Click(object sender, RoutedEventArgs e)
-		{
-			Debug.WriteLine("Добавляем сотрудника");
-
-		}
-
-		/// <summary>
-		/// Обработчик контекстного меню "Добавление интерна"
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void AddIntern_Click(object sender, RoutedEventArgs e)
-		{
-			Debug.WriteLine("Добавляем интерна");
-
-		}
-
-		/// <summary>
-		/// Обработчик контекстного меню "Добавление департамента"
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void AddDep_Click(object sender, RoutedEventArgs e)
-		{
-			Debug.WriteLine("Добавляем департамент");
-			//(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
-		}
-
-		#endregion // Обработчики подменю "Управление департаментами и сотрудниками"
-
-
-		#endregion // Меню "Редактирование"
-
-
 
 		#region Контекстные меню
 
+
 		/// <summary>
-		/// Обработчик контекстного меню "Удаление" работника
+		/// Обработчик контекстного меню дерева организации
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void MenuItemWorkListDel_Click(object sender, RoutedEventArgs e)
+		private void MenuItemTreeView_Click(object sender, RoutedEventArgs e)
 		{
-			if (employeesList.SelectedItem != null)
+			// Выбрано меню "Добавить"
+			if ((sender as MenuItem).Header.ToString() == "Новый")
 			{
-				(organizationTree.SelectedItem as Department)?
-						.removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+				DialogNewDepartment dlgNewDep = new DialogNewDepartment();
+
+				if (dlgNewDep.ShowDialog() == true)
+				{
+					if (organizationTree.SelectedItem is Organization)
+					{
+						(organizationTree.SelectedItem as Organization)?
+							.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
+					} 
+					else
+					{
+						(organizationTree.SelectedItem as Department)?
+							.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
+					}
+				}
 			}
 
-			if (internsList.SelectedItem != null)
+			// Выбрано меню "Переместить"
+			if ((sender as MenuItem).Header.ToString() == "Переместить")
 			{
-				(organizationTree.SelectedItem as Department)?
-						.removeWorker((internsList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+				MessageBox.Show("Перемещаем");
+
 			}
 
+			// Выбрано меню "Редактировать"
+			if ((sender as MenuItem).Header.ToString() == "Редактировать")
+			{
+				MessageBox.Show("Редактируем");
+
+			}
+
+			// Выбрано меню "Удалить"
+			if ((sender as MenuItem).Header.ToString() == "Удалить")
+			{
+				var answer1 = MessageBox.Show("Вы уверены, что хотите удалить департамент и всех его сотрудников?", 
+												"Удаление департамента", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+				if (answer1 == MessageBoxResult.Yes)
+				{
+					var answer2 = MessageBox.Show("Возможно у сотрудников ипотека! Вы хорошо подумали?",
+												"Удаление департамента", MessageBoxButton.YesNo, MessageBoxImage.Question);
+					
+					if (answer2 == MessageBoxResult.Yes)
+					{
+						MessageBox.Show("Удаляем");
+						(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
+					}
+				}
+				
+			}
 		}
 
+
 		/// <summary>
-		/// Обработчик контекстного меню "Удаление департамента"
+		/// Обработчик контекстного меню списков сотрудников и интернов
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void MenuItemTreeViewDelDep_Click(object sender, RoutedEventArgs e)
+		private void MenuItemWorkList_Click(object sender, RoutedEventArgs e)
 		{
-			(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
-		}
+			//MessageBox.Show((sender as MenuItem).Header.ToString());
 
+			// Выбрано меню "Добавить"
+			if ((sender as MenuItem).Header.ToString() == "Добавить")
+			{
+				// Работаем со списком сотрудников
+				if (employeesList.SelectedItem != null)
+				{
+					(organizationTree.SelectedItem as Department)?
+							.addWorker(new Employee("Шарап", "Сишарпов", new DateTime(1974, 6, 17), "Главный программист", 1_000));  // добавляем сотрудника
+
+				}
+
+				// Работаем со списком интернов
+				if (internsList.SelectedItem != null)
+				{
+					(organizationTree.SelectedItem as Department)?
+							.addWorker(new Intern("Игорь", "Новичков", new DateTime(1999, 10, 12), 50_000));  // добавляем интерна
+				}
+			}
+
+
+			// Выбрано меню "Удалить"
+			if ((sender as MenuItem).Header.ToString() == "Удалить")
+			{
+				// Работаем со списком сотрудников
+				if (employeesList.SelectedItem != null)
+				{
+					(organizationTree.SelectedItem as Department)?
+							.removeWorker((employeesList.SelectedItem as Worker).Id);  // удаление сотрудника с переданным Id
+				}
+
+				// Работаем со списком интернов
+				if (internsList.SelectedItem != null)
+				{
+					(organizationTree.SelectedItem as Department)?
+							.removeWorker((internsList.SelectedItem as Worker).Id);  // удаление интерна с переданным Id
+				}
+			}
+		}
 
 
 		/// <summary>
@@ -288,6 +329,13 @@ namespace OrganizationGUI_2
 			internsList.UnselectAll();
 		}
 
+
+		//private void depBossList_LostFocus(object sender, RoutedEventArgs e)
+		//{
+		//	depBossList.UnselectAll();
+		//}
+
+
 		#endregion	// Контекстные меню
 
 
@@ -297,7 +345,7 @@ namespace OrganizationGUI_2
 		/// Наполняет структуру организации
 		/// </summary>
 		/// <returns>Организация</returns>
-		private ObservableCollection<Organization> returnAnyOrganization()
+		private ObservableCollection<Organization> returnAnyOrganizationCollection()
 		{
 
 			Director director = Director.getInstance("Олег", "Важный", new DateTime(1961, 1, 1));
@@ -600,14 +648,17 @@ namespace OrganizationGUI_2
 
 
 
-		private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
-		{
-			
-			wndEdit = new EditWindow(); // создаем новое окно для редактирования
-			wndEdit.Owner = this;		// назначаем родительским окном - главное окно (MainWindow)
-			
-			wndEdit.Show();	// отображаем окно редактирования
-			Hide();			// скрываем главное окно
-		}
+
+
+		//private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
+		//{
+
+		//	wndEdit = new EditWindow(DataContext as Organization); // создаем новое окно для редактирования
+		//	wndEdit.Owner = this;		// назначаем родительским окном - главное окно (MainWindow)
+
+		//	wndEdit.Show();	// отображаем окно редактирования
+		//	Hide();			// скрываем главное окно
+		//}
+
 	}
 }

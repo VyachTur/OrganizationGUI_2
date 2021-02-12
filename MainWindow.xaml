@@ -10,8 +10,8 @@
 	Height="550"
 	MinWidth="670"
 	MinHeight="450"
-	mc:Ignorable="d"
-	MouseLeftButtonDown="MainWindow_MouseLeftButtonDown">
+	MouseLeftButtonDown="MainWindow_MouseLeftButtonDown"
+	mc:Ignorable="d">
 
 	<Window.Resources>
 		<Style TargetType="Border">
@@ -53,17 +53,13 @@
 				<Separator />
 				<MenuItem Click="MenuItemExit_Click" Header="Выйти" />
 			</MenuItem>
-			<MenuItem Header="Редактирование">
-				<MenuItem Header="Сортировать работников">
-					<MenuItem Click="MenuSortById_Click" Header="По Id" />
-					<MenuItem Click="MenuSortByAge_Click" Header="По возрасту" />
-					<MenuItem Click="MenuSortByName_Click" Header="По имени" />
-					<MenuItem Click="MenuSortByLName_Click" Header="По фамилии" />
-					<MenuItem Click="MenuSortByNameAndLName_Click" Header="По имени и фамилии" />
-					<MenuItem Click="MenuSortByLNameAndName_Click" Header="По фамилии и имени" />
-				</MenuItem>
-				<Separator />
-				<MenuItem Click="MenuItemEdit_Click" Header="Управление департаментами и сотрудниками" />
+			<MenuItem Header="Сортировать работников">
+				<MenuItem Click="MenuSortById_Click" Header="По Id" />
+				<MenuItem Click="MenuSortByAge_Click" Header="По возрасту" />
+				<MenuItem Click="MenuSortByName_Click" Header="По имени" />
+				<MenuItem Click="MenuSortByLName_Click" Header="По фамилии" />
+				<MenuItem Click="MenuSortByNameAndLName_Click" Header="По имени и фамилии" />
+				<MenuItem Click="MenuSortByLNameAndName_Click" Header="По фамилии и имени" />
 			</MenuItem>
 		</Menu>
 
@@ -76,12 +72,14 @@
 
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="Начальник организации: " />
-					<TextBlock
+					<TextBox
+						BorderThickness="0"
 						FontSize="18"
 						FontWeight="Medium"
 						Style="{StaticResource PlainText}"
 						Text="{Binding Dir.Name}" />
-					<TextBlock
+					<TextBox
+						BorderThickness="0"
 						FontSize="18"
 						FontWeight="Medium"
 						Style="{StaticResource PlainText}"
@@ -94,12 +92,14 @@
 
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="Заместитель начальника: " />
-					<TextBlock
+					<TextBox
+						BorderThickness="0"
 						FontSize="18"
 						FontWeight="Medium"
 						Style="{StaticResource PlainText}"
 						Text="{Binding AssociateDir.Name}" />
-					<TextBlock
+					<TextBox
+						BorderThickness="0"
 						FontSize="18"
 						FontWeight="Medium"
 						Style="{StaticResource PlainText}"
@@ -127,7 +127,10 @@
 			</TreeView.ItemTemplate>
 			<TreeView.ContextMenu>
 				<ContextMenu>
-					<MenuItem Click="MenuItemTreeViewDelDep_Click" Header="Удалить департамент" />
+					<MenuItem Click="MenuItemTreeView_Click" Header="Новый" />
+					<MenuItem Click="MenuItemTreeView_Click" Header="Переместить" />
+					<MenuItem Click="MenuItemTreeView_Click" Header="Редактировать" />
+					<MenuItem Click="MenuItemTreeView_Click" Header="Удалить" />
 				</ContextMenu>
 			</TreeView.ContextMenu>
 		</TreeView>
@@ -152,25 +155,23 @@
 
 				<TextBlock Margin="5,0,5,0" Text="Начальник департамента:" />
 
-
 				<StackPanel
 					Grid.Row="1"
 					Margin="5,0,5,5"
-					Orientation="Vertical">
+					Orientation="Horizontal">
 
-					<StackPanel Orientation="Horizontal">
-						<TextBlock
-							FontWeight="Medium"
-							Style="{StaticResource PlainText}"
-							Text="{Binding ElementName=organizationTree, Path=SelectedItem.LocalBoss.Name}" />
-						<TextBlock
-							FontWeight="Medium"
-							Style="{StaticResource PlainText}"
-							Text="{Binding StringFormat={} {0}, ElementName=organizationTree, Path=SelectedItem.LocalBoss.LastName}" />
-						<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=\, полных лет: {0}, ElementName=organizationTree, Path=SelectedItem.LocalBoss.Age}" />
-					</StackPanel>
+					<TextBox
+						BorderThickness="0"
+						FontWeight="Medium"
+						Style="{StaticResource PlainText}"
+						Text="{Binding ElementName=organizationTree, Path=SelectedItem.LocalBoss.Name}" />
+					<TextBox
+						BorderThickness="0"
+						FontWeight="Medium"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat={} {0}, ElementName=organizationTree, Path=SelectedItem.LocalBoss.LastName}" />
 
-					<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=Зарплата: {0} р., ElementName=organizationTree, Path=SelectedItem.LocalBossSalary}" />
+					<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=\, зарплата: {0} р., ElementName=organizationTree, Path=SelectedItem.LocalBossSalary}" />
 
 				</StackPanel>
 
@@ -224,7 +225,10 @@
 					</ListView.ItemTemplate>
 					<ListView.ContextMenu>
 						<ContextMenu>
-							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить сотрудника" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Добавить" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Переместить" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Редактировать" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Удалить" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>
@@ -279,7 +283,10 @@
 					</ListView.ItemTemplate>
 					<ListView.ContextMenu>
 						<ContextMenu>
-							<MenuItem Click="MenuItemWorkListDel_Click" Header="Удалить интерна" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Добавить" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Переместить" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Редактировать" />
+							<MenuItem Click="MenuItemWorkList_Click" Header="Удалить интерна" />
 						</ContextMenu>
 					</ListView.ContextMenu>
 				</ListView>

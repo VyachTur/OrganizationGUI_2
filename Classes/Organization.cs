@@ -82,7 +82,7 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Название организации
 		/// </summary>
-		public string Name { get; private set; }
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Директор
@@ -95,7 +95,7 @@ namespace OrganizationGUI.Classes
 		public AssociateDirector AssociateDir { get; set; }
 
 		/// <summary>
-		/// Возвращает коллекцию департаментов в организации
+		/// Возвращает коллекцию департаментов верхнего уровня в организации
 		/// </summary>
 		public ObservableCollection<Department> Departments
 		{
@@ -104,6 +104,15 @@ namespace OrganizationGUI.Classes
 				return departments ?? new ObservableCollection<Department>();
 			}
 		}
+
+
+		//public ObservableCollection<Department> AllDepartments
+		//{
+		//	get
+		//	{
+		//		return returnAllDepartments(Departments);
+		//	}
+		//}
 
 		/// <summary>
 		/// Количество департаментов верхнего уровня
@@ -223,6 +232,23 @@ namespace OrganizationGUI.Classes
 			return departs;
 		}
 
+
+		//private static ObservableCollection<Department> returnAllDepartments(ObservableCollection<Department> deps)
+		//{
+		//	ObservableCollection<Department> departs = new ObservableCollection<Department>();
+
+		//	if (deps.Count > 0)
+		//	{
+		//		for (int i = 0; i < deps.Count; ++i)
+		//		{
+		//			departs.Add(deps[i]);
+
+		//			departs.ToList().AddRange(returnAllDepartments(deps[i].Departments));
+		//		}
+		//	}
+
+		//	return departs;
+		//}
 
 
 		/// <summary>
@@ -368,11 +394,17 @@ namespace OrganizationGUI.Classes
 							.getInstance(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("dirname").Value,
 											XDocument.Parse(xml).Element("ORGANIZATION").Attribute("dirlastname").Value,
 											DateTime.Parse(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("dirbirth").Value));
+			dir.Name = XDocument.Parse(xml).Element("ORGANIZATION").Attribute("dirname").Value; // если директор (синглтон) уже был
+			dir.LastName = XDocument.Parse(xml).Element("ORGANIZATION").Attribute("dirlastname").Value;
+			dir.BirthDate = DateTime.Parse(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("dirbirth").Value);
 
 			AssociateDirector assDir = AssociateDirector
 										.getInstance(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("assdirname").Value,
 														XDocument.Parse(xml).Element("ORGANIZATION").Attribute("assdirlastname").Value,
 														DateTime.Parse(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("assdirbirth").Value));
+			assDir.Name = XDocument.Parse(xml).Element("ORGANIZATION").Attribute("assdirname").Value;   // если зам. (синглтон) уже был
+			assDir.LastName = XDocument.Parse(xml).Element("ORGANIZATION").Attribute("assdirlastname").Value;
+			assDir.BirthDate = DateTime.Parse(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("assdirbirth").Value);
 
 			Organization org = new Organization(XDocument.Parse(xml).Element("ORGANIZATION").Attribute("orgname").Value, dir, assDir);
 

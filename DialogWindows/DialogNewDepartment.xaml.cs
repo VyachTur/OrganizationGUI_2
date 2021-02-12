@@ -13,25 +13,21 @@ using System.Windows.Shapes;
 namespace OrganizationGUI_2
 {
 	/// <summary>
-	/// Interaction logic for EditWindow.xaml
+	/// Interaction logic for DialogNewDepartment.xaml
 	/// </summary>
-	public partial class EditWindow : Window
+	public partial class DialogNewDepartment : Window
 	{
-		public EditWindow()
+		public DialogNewDepartment()
 		{
 			InitializeComponent();
+
+			tboxDepName.Focus();
 		}
 
-
-		private void EditWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		private void Accept_Click(object sender, RoutedEventArgs e)
 		{
-
+			// Если в текстовом поле есть непробельные символы
+			if (tboxDepName.Text.Trim() != String.Empty) DialogResult = true;
 		}
-
-		private void EditWindow_Closed(object sender, EventArgs e)
-		{
-			this.Owner.Show();	// показываем главное окно
-		}
-
 	}
 }
