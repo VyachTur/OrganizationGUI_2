@@ -7,6 +7,8 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Controls;
 using OrganizationGUI_2.DialogWindows;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OrganizationGUI_2
 {
@@ -39,12 +41,20 @@ namespace OrganizationGUI_2
 			DataContext = orgs[0];
 
 
+
+
+
 			//////////////////////????????????????????????///////////////////
 			///
-			foreach (var dic in orgs[0].DicIdNameDepartment)
-			{
-				Debug.WriteLine($"Ключ: {dic.Key} Значение: {dic.Value}");
-			}
+			//foreach (var dic in orgs[0].DicIdNameDepartment)
+			//{
+			//	Debug.WriteLine($"Ключ: {dic.Key} Значение: {dic.Value}");
+			//}
+
+			//foreach (var dep in orgs[0].AllDepartments)
+			//{
+			//	Debug.WriteLine(dep);
+			//}
 
 
 			//ObservableCollection<Department> deps = orgs[0].AllDepartments;
@@ -237,18 +247,46 @@ namespace OrganizationGUI_2
 			// Выбрано меню "Переместить"
 			if ((sender as MenuItem).Header.ToString() == "Переместить")
 			{
-				MessageBox.Show("Перемещаем");
+				// Создаем словарь Идентификатор - Наименование департамента
+				Dictionary<int, string> dicIdNameDeparts = new Dictionary<int, string>();
+
+				// Вспомогательная коллекция без вложенных департаментов (разность коллекций)
+				// чтобы в дальнейшем нельзя было переместить департамент в своего "потомка"
+				IEnumerable<Department> depsExcept = (DataContext as Organization).AllDepartments
+												.Except((organizationTree.SelectedItem as Department).AllSubDepartments.ToList());
+
+				// Заполняем словарь
+				foreach (Department dep in depsExcept)   //(DataContext as Organization).AllDepartments)
+				{
+					dicIdNameDeparts.Add(dep.Id, dep.Name);
+				}
 
 				if (organizationTree.SelectedItem is Department)
 				{
 					DialogTransferDepartment dlgTransferDep =
-						new DialogTransferDepartment((organizationTree.SelectedItem as Department).Name,
-														(DataContext as Organization).DicIdNameDepartment);
+						new DialogTransferDepartment((organizationTree.SelectedItem as Department).Id,
+														(organizationTree.SelectedItem as Department).Name,
+														dicIdNameDeparts,
+														(DataContext as Organization).Name);
 
 					if (dlgTransferDep.ShowDialog() == true)
 					{
-						MessageBox.Show("Перемещение департамента!");
-						//TODO: ПЕРЕМЕЩАЕМ ДЕПАРТАМЕНТ!
+						Department currentDep = organizationTree.SelectedItem as Department;
+						Department tmpDep = new Department(currentDep.Name,
+															currentDep.LocalBoss,
+															currentDep.Departments,
+															currentDep.Workers,
+															DataContext as Organization);
+
+						// Удаляем текущий департамент
+						(DataContext as Organization).removeDepartment(currentDep);
+
+						// Добавляем департамент в нужную коллекцию
+						(DataContext as Organization).getDepartmentFromId(dlgTransferDep.ToDepID)
+														.addDepartment(tmpDep);
+
+
+						//MessageBox.Show(dlgTransferDep.cboxDepNames.Text);
 						//(organizationTree.SelectedItem as Department).Name = dlgTransferDep.tboxDepName.Text;
 					}
 				}

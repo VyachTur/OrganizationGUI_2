@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace OrganizationGUI.Classes
 {
@@ -197,7 +198,33 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
+		/// Все поддепартаменты
+		/// </summary>
+		public List<Department> AllSubDepartments
+		{
+			get
+			{
+				// Все поддепартаменты текущего департамента
+				allSubDepartments = new List<Department>();
+				makeAllSubDepartments(Departments.ToList());
+
+				return allSubDepartments;
+			}
+		}
+
+		/// <summary>
 		/// Возвращает коллекцию работников в текущем департаменте
+		/// </summary>
+		public ObservableCollection<Worker> Workers
+		{
+			get
+			{
+				return workers ?? new ObservableCollection<Worker>();
+			}
+		}
+
+		/// <summary>
+		/// Возвращает коллекцию сотрудников в текущем департаменте
 		/// </summary>
 		public ObservableCollection<Employee> Employees
 		{
@@ -216,7 +243,7 @@ namespace OrganizationGUI.Classes
 		}
 
 		/// <summary>
-		/// Возвращает коллекцию работников в текущем департаменте
+		/// Возвращает коллекцию интернов в текущем департаменте
 		/// </summary>
 		public ObservableCollection<Intern> Interns
 		{
@@ -383,6 +410,19 @@ namespace OrganizationGUI.Classes
 		}
 
 
+		/// <summary>
+		/// Вспомогательный метод. Создаем коллекцию всех поддепартаментов
+		/// </summary>
+		/// <param name="deps">Коллекция департаментов</param>
+		private static void makeAllSubDepartments(List<Department> deps)
+		{
+			for (int i = 0; i < deps.Count; ++i)
+			{
+				allSubDepartments.Add(deps[i]);
+				makeAllSubDepartments(deps[i].Departments.ToList());
+			}
+		}
+
 
 		/// <summary>
 		/// Обновление интерфейса для свойств Employees и CountEmployees
@@ -522,8 +562,9 @@ namespace OrganizationGUI.Classes
 
 		private string name;									// наименование департамента
 		private ObservableCollection<Worker> workers;			// работники департамента
-		private ObservableCollection<Department> departments;   // "поддепартаменты"
-
+		private ObservableCollection<Department> departments;   // поддепартаменты
+		
+		private static List<Department> allSubDepartments;		// ВСЕ поддепартаменты
 		private static int countDep = 0;						// счетчик для идентификатора департамента
 
 		#endregion // Fields

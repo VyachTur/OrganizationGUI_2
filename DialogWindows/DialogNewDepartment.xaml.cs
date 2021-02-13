@@ -24,6 +24,11 @@ namespace OrganizationGUI_2
 			tboxDepName.Focus();
 		}
 
+		/// <summary>
+		/// Обработчик нажатия кнопки подтверждения
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Accept_Click(object sender, RoutedEventArgs e)
 		{
 			// Если в текстовом поле есть непробельные символы
