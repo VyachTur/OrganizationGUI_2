@@ -50,6 +50,14 @@ namespace OrganizationGUI_2.DialogWindows
 			// Если выбран элемент
 			if (cboxDepNames.SelectedItem != null)
 			{
+				// Если выбрана организация, то выходим и присваиваем ToDepID ноль
+				if (cboxDepNames.SelectedIndex == 0)
+				{
+					ToDepID = 0;
+					DialogResult = true;
+				}
+
+
 				string selectedString = cboxDepNames.SelectedItem.ToString();   // выбранный item
 				int posId = selectedString.IndexOf("Id:") + 4;                  // позиция id
 				int lenId = selectedString.Length - posId - 1;                  // длинна id

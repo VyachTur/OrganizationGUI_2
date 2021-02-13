@@ -272,6 +272,7 @@ namespace OrganizationGUI_2
 					if (dlgTransferDep.ShowDialog() == true)
 					{
 						Department currentDep = organizationTree.SelectedItem as Department;
+
 						Department tmpDep = new Department(currentDep.Name,
 															currentDep.LocalBoss,
 															currentDep.Departments,
@@ -281,13 +282,22 @@ namespace OrganizationGUI_2
 						// Удаляем текущий департамент
 						(DataContext as Organization).removeDepartment(currentDep);
 
-						// Добавляем департамент в нужную коллекцию
-						(DataContext as Organization).getDepartmentFromId(dlgTransferDep.ToDepID)
-														.addDepartment(tmpDep);
+						// Если переместить департамент необходимо в корень организации
+						if (dlgTransferDep.ToDepID == 0)
+						{
+							// Добавляем департамент в коллекцию департаментов организации
+							(DataContext as Organization).addDepartment(tmpDep);
+						}
+						else
+						{
+							// Добавляем департамент в нужную коллекцию
+							(DataContext as Organization).getDepartmentFromId(dlgTransferDep.ToDepID)
+															.addDepartment(tmpDep);
+						}
 
 
-						//MessageBox.Show(dlgTransferDep.cboxDepNames.Text);
-						//(organizationTree.SelectedItem as Department).Name = dlgTransferDep.tboxDepName.Text;
+
+
 					}
 				}
 

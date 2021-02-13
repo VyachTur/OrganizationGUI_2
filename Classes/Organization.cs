@@ -213,6 +213,10 @@ namespace OrganizationGUI.Classes
 		public void addDepartment(Department dep)
 		{
 			departments.Add(dep);
+
+			// Обновляем интерфейс (зарплаты главных начальников)
+			OnPropertyChanged("DirSalary");
+			OnPropertyChanged("AssociateDirSalary");
 		}
 
 		/// <summary>
