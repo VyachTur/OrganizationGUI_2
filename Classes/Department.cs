@@ -160,7 +160,19 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Название департамента
 		/// </summary>
-		public string Name { get; set; }
+		public string Name 
+		{ 
+			get
+			{
+				return name;
+			} 
+
+			set
+			{
+				name = value;
+				OnPropertyChanged("Name");
+			}
+		}
 
 		/// <summary>
 		/// Начальник департамента
@@ -508,6 +520,7 @@ namespace OrganizationGUI.Classes
 
 		#region Fields
 
+		private string name;									// наименование департамента
 		private ObservableCollection<Worker> workers;			// работники департамента
 		private ObservableCollection<Department> departments;   // "поддепартаменты"
 

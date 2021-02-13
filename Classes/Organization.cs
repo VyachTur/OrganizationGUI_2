@@ -72,7 +72,7 @@ namespace OrganizationGUI.Classes
 		/// <param name="director">Директор организации</param>
 		/// <param name="associateDirector">Зам. директора</param>
 		public Organization(string name, Director director, AssociateDirector associateDirector)
-			: this(name, director, associateDirector, new ObservableCollection<Department>()) { }
+			: this(name, director, associateDirector, new ObservableCollection<Department>()) {  }
 
 		#endregion
 
@@ -159,6 +159,23 @@ namespace OrganizationGUI.Classes
 			}
 		}
 
+
+		/// <summary>
+		/// Возвращает словарь (Идентификатор департамента, Наименование департамента)
+		/// </summary>
+		public Dictionary<int, string> DicIdNameDepartment
+		{
+			get
+			{
+				// Заполняем словарь идентификаторов и имен департаментов
+				dicDeps = new Dictionary<int, string>();
+				setDictionaryAllDepartments(Departments.ToList());
+
+				return dicDeps;
+			}
+		}
+
+
 		#endregion  // Properties
 
 
@@ -190,6 +207,9 @@ namespace OrganizationGUI.Classes
 		public void addDepartment(Department dep)
 		{
 			departments.Add(dep);
+
+			// Обновляем словарь идентификаторов и имен департаментов
+			//setDictionaryAllDepartments(Departments.ToList());
 		}
 
 
@@ -200,6 +220,9 @@ namespace OrganizationGUI.Classes
 		public void removeDepartment(Department dep)
 		{
 			Organization.returnIncludeDepCollection(Departments, dep).Remove(dep);
+
+			// Обновляем словарь идентификаторов и имен департаментов
+			//setDictionaryAllDepartments(Departments.ToList());
 
 			// Обновляем интерфейс (зарплаты главных начальников)
 			OnPropertyChanged("DirSalary");
@@ -233,22 +256,20 @@ namespace OrganizationGUI.Classes
 		}
 
 
-		//private static ObservableCollection<Department> returnAllDepartments(ObservableCollection<Department> deps)
-		//{
-		//	ObservableCollection<Department> departs = new ObservableCollection<Department>();
+		/// <summary>
+		/// Вспомогательный метод. Заполняет словарь идентификаторов и наименований департаментов организации
+		/// </summary>
+		/// <param name="deps">Коллекция департаментов</param>
+		private static void setDictionaryAllDepartments(List<Department> deps)
+		{
+			for (int i = 0; i < deps.Count; ++i)
+			{
+				dicDeps.Add(deps[i].Id, deps[i].Name);
 
-		//	if (deps.Count > 0)
-		//	{
-		//		for (int i = 0; i < deps.Count; ++i)
-		//		{
-		//			departs.Add(deps[i]);
+				setDictionaryAllDepartments(deps[i].Departments.ToList());
+			}
 
-		//			departs.ToList().AddRange(returnAllDepartments(deps[i].Departments));
-		//		}
-		//	}
-
-		//	return departs;
-		//}
+		}
 
 
 		/// <summary>
@@ -480,5 +501,6 @@ namespace OrganizationGUI.Classes
 
 		private ObservableCollection<Department> departments;   // департаменты в организации
 
+		private static Dictionary<int, string> dicDeps;			// словарь идентификаторов и имен всех департаментов в организации
 	}
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows.Controls;
+using OrganizationGUI_2.DialogWindows;
 
 namespace OrganizationGUI_2
 {
@@ -36,6 +37,15 @@ namespace OrganizationGUI_2
 
 			organizationTree.ItemsSource = orgs;
 			DataContext = orgs[0];
+
+
+			//////////////////////????????????????????????///////////////////
+			///
+			foreach (var dic in orgs[0].DicIdNameDepartment)
+			{
+				Debug.WriteLine($"Ключ: {dic.Key} Значение: {dic.Value}");
+			}
+
 
 			//ObservableCollection<Department> deps = orgs[0].AllDepartments;
 
@@ -215,7 +225,7 @@ namespace OrganizationGUI_2
 					{
 						(organizationTree.SelectedItem as Organization)?
 							.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
-					} 
+					}
 					else
 					{
 						(organizationTree.SelectedItem as Department)?
@@ -229,33 +239,57 @@ namespace OrganizationGUI_2
 			{
 				MessageBox.Show("Перемещаем");
 
+				if (organizationTree.SelectedItem is Department)
+				{
+					DialogTransferDepartment dlgTransferDep =
+						new DialogTransferDepartment((organizationTree.SelectedItem as Department).Name,
+														(DataContext as Organization).DicIdNameDepartment);
+
+					if (dlgTransferDep.ShowDialog() == true)
+					{
+						MessageBox.Show("Перемещение департамента!");
+						//TODO: ПЕРЕМЕЩАЕМ ДЕПАРТАМЕНТ!
+						//(organizationTree.SelectedItem as Department).Name = dlgTransferDep.tboxDepName.Text;
+					}
+				}
+
 			}
 
 			// Выбрано меню "Редактировать"
 			if ((sender as MenuItem).Header.ToString() == "Редактировать")
 			{
-				MessageBox.Show("Редактируем");
+				if (organizationTree.SelectedItem is Department)
+				{
+					DialogEditDepartment dlgEditDep =
+						new DialogEditDepartment((organizationTree.SelectedItem as Department).Name);
 
+					if (dlgEditDep.ShowDialog() == true)
+					{
+						(organizationTree.SelectedItem as Department).Name = dlgEditDep.tboxDepName.Text;
+					}
+				}
 			}
 
 			// Выбрано меню "Удалить"
 			if ((sender as MenuItem).Header.ToString() == "Удалить")
 			{
-				var answer1 = MessageBox.Show("Вы уверены, что хотите удалить департамент и всех его сотрудников?", 
+				if (organizationTree.SelectedItem is Department)
+				{
+					var answer1 = MessageBox.Show("Вы уверены, что хотите удалить департамент и всех его сотрудников?",
 												"Удаление департамента", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-				if (answer1 == MessageBoxResult.Yes)
-				{
-					var answer2 = MessageBox.Show("Возможно у сотрудников ипотека! Вы хорошо подумали?",
-												"Удаление департамента", MessageBoxButton.YesNo, MessageBoxImage.Question);
-					
-					if (answer2 == MessageBoxResult.Yes)
+					if (answer1 == MessageBoxResult.Yes)
 					{
-						MessageBox.Show("Удаляем");
-						(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
+						var answer2 = MessageBox.Show("Возможно у сотрудников ипотека! Вы хорошо подумали?",
+													"Удаление департамента", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+						if (answer2 == MessageBoxResult.Yes)
+						{
+							MessageBox.Show("Удаляем...");
+							(DataContext as Organization)?.removeDepartment(organizationTree.SelectedItem as Department);
+						}
 					}
 				}
-				
 			}
 		}
 
@@ -272,7 +306,10 @@ namespace OrganizationGUI_2
 			// Выбрано меню "Добавить"
 			if ((sender as MenuItem).Header.ToString() == "Добавить")
 			{
-				// Работаем со списком сотрудников
+				// TODO: ДОДЕЛАТЬ!!!
+				Convert.ToInt32("102");
+
+				// Работаем со списком сотрудников ПРОБА!!
 				if (employeesList.SelectedItem != null)
 				{
 					(organizationTree.SelectedItem as Department)?
@@ -286,6 +323,20 @@ namespace OrganizationGUI_2
 					(organizationTree.SelectedItem as Department)?
 							.addWorker(new Intern("Игорь", "Новичков", new DateTime(1999, 10, 12), 50_000));  // добавляем интерна
 				}
+			}
+
+			// Выбрано меню "Переместить"
+			if ((sender as MenuItem).Header.ToString() == "Переместить")
+			{
+				// TODO: ДОДЕЛАТЬ!!!
+
+			}
+
+			// Выбрано меню "Редактировать"
+			if ((sender as MenuItem).Header.ToString() == "Редактировать")
+			{
+				// TODO: ДОДЕЛАТЬ!!!
+
 			}
 
 
@@ -330,13 +381,7 @@ namespace OrganizationGUI_2
 		}
 
 
-		//private void depBossList_LostFocus(object sender, RoutedEventArgs e)
-		//{
-		//	depBossList.UnselectAll();
-		//}
-
-
-		#endregion	// Контекстные меню
+		#endregion // Контекстные меню
 
 
 
