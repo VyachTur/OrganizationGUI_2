@@ -43,7 +43,6 @@ namespace OrganizationGUI_2
 
 
 
-
 			//////////////////////????????????????????????///////////////////
 			///
 			//foreach (var dic in orgs[0].DicIdNameDepartment)
@@ -738,20 +737,6 @@ namespace OrganizationGUI_2
 		{
 			DragMove();
 		}
-
-
-
-
-
-		//private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
-		//{
-
-		//	wndEdit = new EditWindow(DataContext as Organization); // создаем новое окно для редактирования
-		//	wndEdit.Owner = this;		// назначаем родительским окном - главное окно (MainWindow)
-
-		//	wndEdit.Show();	// отображаем окно редактирования
-		//	Hide();			// скрываем главное окно
-		//}
 
 	}
 }

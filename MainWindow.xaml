@@ -6,10 +6,9 @@
 	xmlns:local="clr-namespace:OrganizationGUI_2"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Title="ОБРПРБД 'Обычная организация'"
-	Width="800"
-	Height="550"
-	MinWidth="670"
-	MinHeight="450"
+	
+	MinWidth="900"
+	MinHeight="500"
 	MouseLeftButtonDown="MainWindow_MouseLeftButtonDown"
 	mc:Ignorable="d">
 
@@ -28,6 +27,61 @@
 			<Setter Property="TextBlock.FontSize" Value="16" />
 			<Setter Property="TextBlock.FontWeight" Value="Normal" />
 		</Style>
+		<ControlTemplate x:Key="DatePickerTextBoxTemplate1" TargetType="{x:Type DatePickerTextBox}">
+			<Grid>
+				<Grid.Resources>
+					<SolidColorBrush x:Key="WatermarkBrush" Color="#FFAAAAAA"/>
+				</Grid.Resources>
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0"/>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver"/>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<ColorAnimation Duration="0" Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#FF99C1E2"/>
+								<ColorAnimation Duration="0" Storyboard.TargetName="watermark_decorator" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#FF99C1E2"/>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+					<VisualStateGroup x:Name="WatermarkStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0"/>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Unwatermarked"/>
+						<VisualState x:Name="Watermarked">
+							<Storyboard>
+								<DoubleAnimation Duration="0" Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="Opacity" To="0"/>
+								<DoubleAnimation Duration="0" Storyboard.TargetName="PART_Watermark" Storyboard.TargetProperty="Opacity" To="0"/>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+					<VisualStateGroup x:Name="FocusStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0"/>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Unfocused"/>
+						<VisualState x:Name="Focused">
+							<Storyboard>
+								<DoubleAnimation Duration="0" Storyboard.TargetName="FocusVisual" Storyboard.TargetProperty="Opacity" To="1"/>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<Border x:Name="Border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="1" Opacity="1" Padding="{TemplateBinding Padding}">
+					<Grid x:Name="WatermarkContent" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+						<Border x:Name="ContentElement" BorderThickness="1" BorderBrush="#FFFFFFFF"/>
+						<Border x:Name="watermark_decorator" BorderThickness="1" BorderBrush="#FFFFFFFF">
+							<ContentControl x:Name="PART_Watermark" Focusable="False" IsHitTestVisible="False" Opacity="0" Padding="2"/>
+						</Border>
+						<ScrollViewer x:Name="PART_ContentHost" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						<Border x:Name="FocusVisual" BorderBrush="#FF45D6FA" CornerRadius="1" IsHitTestVisible="False" Opacity="0"/>
+					</Grid>
+				</Border>
+			</Grid>
+		</ControlTemplate>
 	</Window.Resources>
 
 	<Grid>
@@ -87,9 +141,14 @@
 					<TextBlock
 						FontSize="18"
 						Style="{StaticResource PlainText}"
-						Text="{Binding StringFormat=\, зарплата: {0} р., Path=DirSalary}" />
+						Text="{Binding StringFormat=\, зарплата: {0} р.\, дата рождения: , Path=DirSalary}" />
+					<DatePickerTextBox
+						Template="{DynamicResource DatePickerTextBoxTemplate1}"
+						FontSize="18"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat='dd.MM.yyyy', Path=Dir.BirthDate}" />
 				</StackPanel>
-
+				
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="Заместитель начальника: " />
 					<TextBox
@@ -107,7 +166,13 @@
 					<TextBlock
 						FontSize="18"
 						Style="{StaticResource PlainText}"
-						Text="{Binding StringFormat=\, зарплата: {0} р., Path=AssociateDirSalary}" />
+						Text="{Binding StringFormat=\, зарплата: {0} р.\, дата рождения: , Path=AssociateDirSalary}" />
+					<DatePickerTextBox
+						Template="{DynamicResource DatePickerTextBoxTemplate1}"
+						FontSize="18"
+						Style="{StaticResource PlainText}"
+						Text="{Binding StringFormat='dd.MM.yyyy', Path=AssociateDir.BirthDate}" />
+
 				</StackPanel>
 
 			</StackPanel>
@@ -171,7 +236,11 @@
 						Style="{StaticResource PlainText}"
 						Text="{Binding StringFormat={} {0}, ElementName=organizationTree, Path=SelectedItem.LocalBoss.LastName}" />
 
-					<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=\, зарплата: {0} р., ElementName=organizationTree, Path=SelectedItem.LocalBossSalary}" />
+					<TextBlock Style="{StaticResource PlainText}" Text="{Binding StringFormat=\, зарплата: {0} р.\, дата рождения:, ElementName=organizationTree, Path=SelectedItem.LocalBossSalary}" />
+					
+					<DatePickerTextBox Template="{DynamicResource DatePickerTextBoxTemplate1}"
+						Style="{StaticResource PlainText}"
+						Text="{Binding ElementName=organizationTree, StringFormat='dd.MM.yyyy', Path=SelectedItem.LocalBoss.BirthDate}" />
 
 				</StackPanel>
 
