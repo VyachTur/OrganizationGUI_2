@@ -1,14 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace OrganizationGUI_2.DialogWindows
 {
@@ -28,7 +20,7 @@ namespace OrganizationGUI_2.DialogWindows
 			foreach (var pair in dicIdName)
 			{
 				// Добавляем в список ComboBox все наименования и id департаментов кроме перемещаемого
-				if(pair.Key != id) cboxDepNames.Items.Add($"{pair.Value} (Id: {pair.Key})");
+				if (pair.Key != id) cboxDepNames.Items.Add($"{pair.Value} (Id: {pair.Key})");
 			}
 
 			cboxDepNames.Focus();
@@ -60,16 +52,16 @@ namespace OrganizationGUI_2.DialogWindows
 
 				string selectedString = cboxDepNames.SelectedItem.ToString();   // выбранный item
 				int posId = selectedString.IndexOf("Id:") + 4;                  // позиция id
-				int lenId = selectedString.Length - posId - 1;                  // длинна id
+				int lenId = selectedString.Length - posId - 1;                  // длина id
 
-				string selectedId = selectedString.Substring(posId, lenId);		// "вырезаем" id
+				string selectedId = selectedString.Substring(posId, lenId);     // "вырезаем" id
 
 				if (int.TryParse(selectedId, out int id))
 				{
 					ToDepID = id;
 					DialogResult = true;
 				}
-				
+
 			}
 			else
 			{

@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace OrganizationGUI_2
+namespace OrganizationGUI_2.DialogWindows
 {
 	/// <summary>
-	/// Interaction logic for DialogNewDepartment.xaml
+	/// Interaction logic for DialogEditDepartment.xaml
 	/// </summary>
-	public partial class DialogNewDepartment : Window
+	public partial class DialogEditDepartment : Window
 	{
-		public DialogNewDepartment()
+		public DialogEditDepartment(string depName)
 		{
 			InitializeComponent();
 
+			tboxDepName.Text = depName;
 			tboxDepName.Focus();
+			tboxDepName.SelectAll();
 		}
 
 		/// <summary>
@@ -35,4 +28,5 @@ namespace OrganizationGUI_2
 			if (tboxDepName.Text.Trim() != String.Empty) DialogResult = true;
 		}
 	}
+
 }

@@ -7,8 +7,21 @@ namespace OrganizationGUI.Classes
 	/// <summary>
 	/// Абстрактный класс работника
 	/// </summary>
-	public abstract class Worker
+	public abstract class Worker : INotifyPropertyChanged
 	{
+		#region INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void OnPropertyChanged([CallerMemberName] string prop = "")
+		{
+			if (PropertyChanged != null)
+				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+		}
+
+		#endregion // INotifyPropertyChanged
+
+
 		#region Properties
 
 		/// <summary>
@@ -49,12 +62,12 @@ namespace OrganizationGUI.Classes
 
 		#region Fields
 
-		protected static int countWorker = 0;	// количество созданных работников (нач. деп., сотрудники, интерны)
+		protected static int countWorker = 0;   // количество созданных работников (нач. деп., сотрудники, интерны)
 
 		#endregion
 
 
-		
+
 
 	}
 }

@@ -4,17 +4,15 @@ using OrganizationGUI.Classes;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Microsoft.Win32;
-using System.IO;
 using System.Windows.Controls;
 using OrganizationGUI_2.DialogWindows;
+using OrganizationGUI_2.DialogWindows.WorkerDialogs;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OrganizationGUI_2
 {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// 
 	/// Программа реализует структуру Организации и представляет ее
 	/// в графическом интерфейсе с использованием WPF.
 	/// В директории с программой находится файл organization.xml с данными об
@@ -22,6 +20,11 @@ namespace OrganizationGUI_2
 	/// выполнив Файл -> Загрузить, и выбрав данный xml-файл.
 	/// Также можно произвести выгрузку данных организации в xml-файл, выполнив
 	/// Файл -> Выгрузить.
+	/// Сортировка сотрудников по различным полям проискходит через меню Сортировать работников.
+	/// Редактирование департаментов и работников происходит через контекстные меню 
+	/// соответствующих элементов окна (TreeView, ListView).
+	/// Управленцев (директор организации, его заместитель и начальники департаментов)
+	/// можно только редактировать (перемещать запрещено).
 	/// </summary>
 	public partial class MainWindow : Window
 	{
@@ -31,34 +34,13 @@ namespace OrganizationGUI_2
 			InitializeComponent();
 
 
-
 			#region Наполнение структуры организации из кода
 
-			ObservableCollection<Organization> orgs;
-			orgs = returnAnyOrganizationCollection();
+			//ObservableCollection<Organization> orgs;
+			//orgs = returnAnyOrganizationCollection();
 
-			organizationTree.ItemsSource = orgs;
-			DataContext = orgs[0];
-
-
-
-
-			//////////////////////????????????????????????///////////////////
-			///
-			//foreach (var dic in orgs[0].DicIdNameDepartment)
-			//{
-			//	Debug.WriteLine($"Ключ: {dic.Key} Значение: {dic.Value}");
-			//}
-
-			//foreach (var dep in orgs[0].AllDepartments)
-			//{
-			//	Debug.WriteLine(dep);
-			//}
-
-
-			//ObservableCollection<Department> deps = orgs[0].AllDepartments;
-
-			//int i = 1 + 1;
+			//organizationTree.ItemsSource = orgs;
+			//DataContext = orgs[0];
 
 			#endregion    // Наполнение структуры организации из кода
 		}
@@ -226,80 +208,82 @@ namespace OrganizationGUI_2
 			// Выбрано меню "Добавить"
 			if ((sender as MenuItem).Header.ToString() == "Новый")
 			{
-				DialogNewDepartment dlgNewDep = new DialogNewDepartment();
-
-				if (dlgNewDep.ShowDialog() == true)
+				if (organizationTree.SelectedItem != null)
 				{
-					if (organizationTree.SelectedItem is Organization)
+					DialogNewDepartment dlgNewDep = new DialogNewDepartment();
+
+					if (dlgNewDep.ShowDialog() == true)
 					{
-						(organizationTree.SelectedItem as Organization)?
-							.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
-					}
-					else
-					{
-						(organizationTree.SelectedItem as Department)?
-							.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
+						if (organizationTree.SelectedItem is Organization)
+						{
+							(organizationTree.SelectedItem as Organization)?
+								.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
+						}
+						else
+						{
+							(organizationTree.SelectedItem as Department)?
+								.addDepartment(new Department(dlgNewDep.tboxDepName.Text, DataContext as Organization));
+						}
 					}
 				}
+
 			}
 
 			// Выбрано меню "Переместить"
 			if ((sender as MenuItem).Header.ToString() == "Переместить")
 			{
-				// Создаем словарь Идентификатор - Наименование департамента
-				Dictionary<int, string> dicIdNameDeparts = new Dictionary<int, string>();
-
-				// Вспомогательная коллекция без вложенных департаментов (разность коллекций)
-				// чтобы в дальнейшем нельзя было переместить департамент в своего "потомка"
-				IEnumerable<Department> depsExcept = (DataContext as Organization).AllDepartments
-												.Except((organizationTree.SelectedItem as Department).AllSubDepartments.ToList());
-
-				// Заполняем словарь
-				foreach (Department dep in depsExcept)   //(DataContext as Organization).AllDepartments)
-				{
-					dicIdNameDeparts.Add(dep.Id, dep.Name);
-				}
-
 				if (organizationTree.SelectedItem is Department)
 				{
-					DialogTransferDepartment dlgTransferDep =
-						new DialogTransferDepartment((organizationTree.SelectedItem as Department).Id,
-														(organizationTree.SelectedItem as Department).Name,
-														dicIdNameDeparts,
-														(DataContext as Organization).Name);
+					// Создаем словарь Идентификатор - Наименование департамента
+					Dictionary<int, string> dicIdNameDeparts = new Dictionary<int, string>();
 
-					if (dlgTransferDep.ShowDialog() == true)
+					// Вспомогательная коллекция без вложенных департаментов (разность коллекций)
+					// чтобы в дальнейшем нельзя было переместить департамент в своего "потомка"
+					IEnumerable<Department> depsExcept = (DataContext as Organization).AllDepartments
+													.Except((organizationTree.SelectedItem as Department).AllSubDepartments.ToList());
+
+					// Заполняем словарь
+					foreach (Department dep in depsExcept)
 					{
-						Department currentDep = organizationTree.SelectedItem as Department;
+						dicIdNameDeparts.Add(dep.Id, dep.Name);
+					}
 
-						Department tmpDep = new Department(currentDep.Name,
-															currentDep.LocalBoss,
-															currentDep.Departments,
-															currentDep.Workers,
-															DataContext as Organization);
+					if (organizationTree.SelectedItem is Department)
+					{
+						DialogTransferDepartment dlgTransferDep =
+							new DialogTransferDepartment((organizationTree.SelectedItem as Department).Id,
+															(organizationTree.SelectedItem as Department).Name,
+															dicIdNameDeparts,
+															(DataContext as Organization).Name);
 
-						// Удаляем текущий департамент
-						(DataContext as Organization).removeDepartment(currentDep);
-
-						// Если переместить департамент необходимо в корень организации
-						if (dlgTransferDep.ToDepID == 0)
+						if (dlgTransferDep.ShowDialog() == true)
 						{
-							// Добавляем департамент в коллекцию департаментов организации
-							(DataContext as Organization).addDepartment(tmpDep);
+							Department currentDep = organizationTree.SelectedItem as Department;
+
+							Department tmpDep = new Department(currentDep.Name,
+																currentDep.LocalBoss,
+																currentDep.Departments,
+																currentDep.Workers,
+																DataContext as Organization);
+
+							// Удаляем текущий департамент
+							(DataContext as Organization).removeDepartment(currentDep);
+
+							// Если переместить департамент необходимо в корень организации
+							if (dlgTransferDep.ToDepID == 0)
+							{
+								// Добавляем департамент в коллекцию департаментов организации
+								(DataContext as Organization).addDepartment(tmpDep);
+							}
+							else
+							{
+								// Добавляем департамент в нужную коллекцию
+								(DataContext as Organization).getDepartmentFromId(dlgTransferDep.ToDepID)
+																.addDepartment(tmpDep);
+							}
 						}
-						else
-						{
-							// Добавляем департамент в нужную коллекцию
-							(DataContext as Organization).getDepartmentFromId(dlgTransferDep.ToDepID)
-															.addDepartment(tmpDep);
-						}
-
-
-
-
 					}
 				}
-
 			}
 
 			// Выбрано меню "Редактировать"
@@ -348,44 +332,125 @@ namespace OrganizationGUI_2
 		/// <param name="e"></param>
 		private void MenuItemWorkList_Click(object sender, RoutedEventArgs e)
 		{
-			//MessageBox.Show((sender as MenuItem).Header.ToString());
-
 			// Выбрано меню "Добавить"
 			if ((sender as MenuItem).Header.ToString() == "Добавить")
 			{
-				// TODO: ДОДЕЛАТЬ!!!
-				Convert.ToInt32("102");
-
-				// Работаем со списком сотрудников ПРОБА!!
-				if (employeesList.SelectedItem != null)
+				if (organizationTree.SelectedItem is Department)
 				{
-					(organizationTree.SelectedItem as Department)?
-							.addWorker(new Employee("Шарап", "Сишарпов", new DateTime(1974, 6, 17), "Главный программист", 1_000));  // добавляем сотрудника
+					// Работаем со списком сотрудников
+					if (employeesList.SelectedItem != null)
+					{
+						Employee employee = new Employee();
 
-				}
+						DialogNewWorker dlgNewEmployee = new DialogNewWorker(employee);
 
-				// Работаем со списком интернов
-				if (internsList.SelectedItem != null)
-				{
-					(organizationTree.SelectedItem as Department)?
-							.addWorker(new Intern("Игорь", "Новичков", new DateTime(1999, 10, 12), 50_000));  // добавляем интерна
+						if (dlgNewEmployee.ShowDialog() == true)
+						{
+							(organizationTree.SelectedItem as Department)?
+											.addWorker(employee);  // добавляем сотрудника
+						}
+					}
+
+					// Работаем со списком интернов
+					if (internsList.SelectedItem != null)
+					{
+						Intern intern = new Intern();
+
+						DialogNewWorker dlgNewIntern = new DialogNewWorker(intern);
+
+						if (dlgNewIntern.ShowDialog() == true)
+						{
+							(organizationTree.SelectedItem as Department)?
+								.addWorker(intern);  // добавляем интерна
+						}
+					}
 				}
 			}
 
 			// Выбрано меню "Переместить"
 			if ((sender as MenuItem).Header.ToString() == "Переместить")
 			{
-				// TODO: ДОДЕЛАТЬ!!!
+				if (organizationTree.SelectedItem is Department)
+				{
+					DialogTransferWorker dlgTransferWorker =
+						new DialogTransferWorker(DataContext as Organization);
 
+					if (dlgTransferWorker.ShowDialog() == true)
+					{
+						// Был выделен сотрудник
+						if (employeesList.SelectedItem != null)
+						{
+							Employee currentEmployee = employeesList.SelectedItem as Employee;
+
+							// Создаем временного сотрудника для перемещения
+							Employee tmpEmployee = new Employee(currentEmployee.Name,
+																currentEmployee.LastName,
+																currentEmployee.BirthDate,
+																currentEmployee.NamePost,
+																currentEmployee.Salary / 168);
+
+							(DataContext as Organization).getDepartmentFromId(dlgTransferWorker.ToDepID)
+									.addWorker(tmpEmployee);
+
+							// Удаляем сотрудника по Id
+							(organizationTree.SelectedItem as Department).removeWorker(currentEmployee.Id);
+						}
+
+						// Был выделен интерн
+						if (internsList.SelectedItem != null)
+						{
+							Intern currentIntern = internsList.SelectedItem as Intern;
+
+							// Создаем временного сотрудника для перемещения
+							Intern tmpIntern = new Intern(currentIntern.Name,
+															currentIntern.LastName,
+															currentIntern.BirthDate,
+															currentIntern.Salary);
+
+							(DataContext as Organization).getDepartmentFromId(dlgTransferWorker.ToDepID)
+									.addWorker(tmpIntern);
+
+							// Удаляем сотрудника по Id
+							(organizationTree.SelectedItem as Department).removeWorker(currentIntern.Id);
+						}
+					}
+				}
 			}
 
 			// Выбрано меню "Редактировать"
 			if ((sender as MenuItem).Header.ToString() == "Редактировать")
 			{
-				// TODO: ДОДЕЛАТЬ!!!
+				if (organizationTree.SelectedItem is Department)
+				{
+					// Работаем со списком сотрудников
+					if (employeesList.SelectedItem != null)
+					{
+						Employee employee = employeesList.SelectedItem as Employee;
 
+						DialogEditWorker dlgEditEmployee = new DialogEditWorker(employee);
+
+						dlgEditEmployee.ShowDialog();
+
+						employee.OnPropertyChanged("Age");  // обновляем отображение возраста
+					}
+
+					// Работаем со списком интернов
+					if (internsList.SelectedItem != null)
+					{
+						Intern intern = internsList.SelectedItem as Intern;
+
+						DialogEditWorker dlgEditIntern = new DialogEditWorker(intern);
+
+						dlgEditIntern.ShowDialog();
+
+						intern.OnPropertyChanged("Age");    // обновляем отображение возраста
+					}
+				}
+
+				// Обновляем интерфейс
+				(organizationTree.SelectedItem as Department).refreshBigBossSalary();
+				(organizationTree.SelectedItem as Department).refreshLocalBossSalary();
 			}
-
 
 			// Выбрано меню "Удалить"
 			if ((sender as MenuItem).Header.ToString() == "Удалить")
@@ -429,6 +494,7 @@ namespace OrganizationGUI_2
 
 
 		#endregion // Контекстные меню
+
 
 
 
@@ -724,7 +790,6 @@ namespace OrganizationGUI_2
 			return orgs;
 
 		}
-
 
 
 

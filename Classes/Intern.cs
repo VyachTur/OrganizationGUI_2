@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 
 namespace OrganizationGUI.Classes
@@ -8,20 +6,8 @@ namespace OrganizationGUI.Classes
 	/// <summary>
 	/// Интерн
 	/// </summary>
-	public class Intern : Worker, ISalary, INotifyPropertyChanged
+	public class Intern : Worker, ISalary
 	{
-		#region INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public void OnPropertyChanged([CallerMemberName] string prop = "")
-		{
-			if (PropertyChanged != null)
-				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
-		}
-
-		#endregion // INotifyPropertyChanged
-
 		#region Constructors
 
 		/// <summary>
@@ -112,18 +98,18 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Зарплата интерна
 		/// </summary>
-		public int Salary 
-		{ 
+		public int Salary
+		{
 			get
 			{
 				return salary;
 			}
-				
+
 			set
 			{
 				salary = value;
 				OnPropertyChanged("Salary");
-			} 
+			}
 		}
 
 		#endregion  // Properties

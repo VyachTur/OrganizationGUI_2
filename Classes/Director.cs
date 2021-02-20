@@ -1,26 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Класс директора (синглтон, т.к. директор в организации один)
 	/// </summary>
-	public class Director : Worker, INotifyPropertyChanged
+	public class Director : Worker
 	{
-		#region INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public void OnPropertyChanged([CallerMemberName] string prop = "")
-		{
-			if (PropertyChanged != null)
-				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
-		}
-
-		#endregion // INotifyPropertyChanged
-
 		#region Constructors
 
 		/// <summary>
@@ -140,7 +126,7 @@ namespace OrganizationGUI.Classes
 
 		#endregion
 
-		
+
 
 	}
 }

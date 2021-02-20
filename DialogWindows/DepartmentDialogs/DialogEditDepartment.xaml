@@ -1,5 +1,5 @@
 ﻿<Window
-	x:Class="OrganizationGUI_2.DialogNewDepartment"
+	x:Class="OrganizationGUI_2.DialogWindows.DialogEditDepartment"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -29,7 +29,7 @@
 		<TextBlock
 			Margin="5,5,5,5"
 			Style="{StaticResource PlainText}"
-			Text="Введите название нового департамента:" />
+			Text="Введите новое название департамента:" />
 		<TextBox
 			x:Name="tboxDepName"
 			Grid.Row="1"

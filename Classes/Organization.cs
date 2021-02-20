@@ -5,8 +5,6 @@ using System.Linq;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
-
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -72,7 +70,7 @@ namespace OrganizationGUI.Classes
 		/// <param name="director">Директор организации</param>
 		/// <param name="associateDirector">Зам. директора</param>
 		public Organization(string name, Director director, AssociateDirector associateDirector)
-			: this(name, director, associateDirector, new ObservableCollection<Department>()) {  }
+			: this(name, director, associateDirector, new ObservableCollection<Department>()) { }
 
 		#endregion
 
@@ -166,24 +164,7 @@ namespace OrganizationGUI.Classes
 		}
 
 
-		/// <summary>
-		/// Возвращает словарь (Идентификатор департамента, Наименование департамента)
-		/// </summary>
-		//public Dictionary<int, string> DicIdNameDepartment
-		//{
-		//	get
-		//	{
-		//		// Заполняем словарь идентификаторов и имен департаментов
-		//		dicDeps = new Dictionary<int, string>();
-		//		setDictionaryAllDepartments(Departments.ToList());
-
-		//		return dicDeps;
-		//	}
-		//}
-
-
 		#endregion  // Properties
-
 
 
 
@@ -288,22 +269,6 @@ namespace OrganizationGUI.Classes
 
 			return departs;
 		}
-
-
-		/// <summary>
-		/// Вспомогательный метод. Заполняет словарь идентификаторов и наименований департаментов организации
-		/// </summary>
-		/// <param name="deps">Коллекция департаментов</param>
-		//private static void setDictionaryAllDepartments(List<Department> deps)
-		//{
-		//	for (int i = 0; i < deps.Count; ++i)
-		//	{
-		//		dicDeps.Add(deps[i].Id, deps[i].Name);
-
-		//		setDictionaryAllDepartments(deps[i].Departments.ToList());
-		//	}
-
-		//}
 
 
 		/// <summary>
@@ -417,7 +382,7 @@ namespace OrganizationGUI.Classes
 
 				foreach (Department department in dep.Departments)
 				{
-					XElement xeDEP = serializerSubDeps(department);	// рекурсия
+					XElement xeDEP = serializerSubDeps(department); // рекурсия
 
 					xeSUBDEPARTMENTS.Add(xeDEP);
 				}
@@ -519,7 +484,7 @@ namespace OrganizationGUI.Classes
 				foreach (var itemSubdepXml in xeDep.Element("DEPARTMENTS").Elements("DEPARTMENT").ToList())
 				{
 					// ПОДДЕПАРТАМЕНТЫ ДЕПАРТАМЕНТА
-					dep.addDepartment(deserializerSubDeps(itemSubdepXml, org));	// рекурсия
+					dep.addDepartment(deserializerSubDeps(itemSubdepXml, org)); // рекурсия
 				}
 			}
 
@@ -534,7 +499,6 @@ namespace OrganizationGUI.Classes
 
 
 		private ObservableCollection<Department> departments;   // департаменты в организации
-		//private static Dictionary<int, string> dicDeps;         // словарь идентификаторов и имен всех департаментов в организации
-		private static List<Department> allDepartments;			// все департаменты в организации
+		private static List<Department> allDepartments;         // все департаменты в организации
 	}
 }

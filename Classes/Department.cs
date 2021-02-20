@@ -33,9 +33,9 @@ namespace OrganizationGUI.Classes
 			ID = 1,         // для сортировки по идентификатору сотрудника
 			AGE,            // для сортировки по возрасту
 			NAME,           // для сортировки по имени
-			LNAME,			// для сортировки по фамилии
-			NAME_LNAME,		// для сортировки сначала по имени, потом по фамилии
-			LNAME_NAME,		// для сортировки сначала по фамилии, потом по имени
+			LNAME,          // для сортировки по фамилии
+			NAME_LNAME,     // для сортировки сначала по имени, потом по фамилии
+			LNAME_NAME,     // для сортировки сначала по фамилии, потом по имени
 		}
 
 		#region Constructors
@@ -121,7 +121,7 @@ namespace OrganizationGUI.Classes
 		/// </summary>
 		/// <param name="name">Наименование департамента</param>
 		/// <param name="departments">Департаменты в текущем департаменте</param>
-		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departments) 
+		public Department(string name, DepBoss localBoss, ObservableCollection<Department> departments)
 		{
 			Id = ++countDep;
 
@@ -161,12 +161,12 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Название департамента
 		/// </summary>
-		public string Name 
-		{ 
+		public string Name
+		{
 			get
 			{
 				return name;
-			} 
+			}
 
 			set
 			{
@@ -305,8 +305,8 @@ namespace OrganizationGUI.Classes
 		{
 			get
 			{
-				if (LocalBoss.Name != null) 
-				{ 
+				if (LocalBoss.Name != null)
+				{
 					double salary = salaryDepWorkers() * 0.15;
 					salary = Math.Round(salary);    // округляем до целых
 
@@ -362,30 +362,6 @@ namespace OrganizationGUI.Classes
 			refreshBigBossSalary();
 		}
 
-
-		/// <summary>
-		/// Удаление департамента
-		/// </summary>
-		/// <param name="dep">Департамент</param>
-		//public void removeDepartment(Department dep)
-		//{
-		//	// Если департамент есть в коллекции, то удаляем его
-		//	if (departments.Contains(dep)) departments.Remove(dep);
-		//}
-
-		/// <summary>
-		/// Удаление департамента (перегруженный метод)
-		/// </summary>
-		/// <param name="id">Идентификатор департамента</param>
-		//public void removeDepartment(int id)
-		//{
-		//	// Если департамент с нужным id есть в коллекции, то удаляем его
-		//	if (departments.Contains(departments.ToList().Find(item => item.Id == id)))
-		//						departments.Remove(departments.ToList().Find(item => item.Id == id));
-		//}
-
-		
-
 		/// <summary>
 		/// Удаляет работника из департамента по идентификатору
 		/// </summary>
@@ -439,7 +415,7 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Обновление интерфейса для свойства LocalBossSalary
 		/// </summary>
-		private void refreshLocalBossSalary()
+		public void refreshLocalBossSalary()
 		{
 			OnPropertyChanged("LocalBossSalary");
 		}
@@ -447,7 +423,7 @@ namespace OrganizationGUI.Classes
 		/// <summary>
 		/// Обновление интерфейса для свойств в организации DirSalary и AssociateDirSalary
 		/// </summary>
-		private void refreshBigBossSalary()
+		public void refreshBigBossSalary()
 		{
 			Org.OnPropertyChanged("DirSalary");
 			Org.OnPropertyChanged("AssociateDirSalary");
@@ -537,10 +513,10 @@ namespace OrganizationGUI.Classes
 					break;
 			}
 
-			refreshView();	// обновляем интерфейс после сортировки
+			refreshView();  // обновляем интерфейс после сортировки
 		}
 
-		#endregion	// Sorting
+		#endregion // Sorting
 
 
 		/// <summary>
@@ -560,12 +536,12 @@ namespace OrganizationGUI.Classes
 
 		#region Fields
 
-		private string name;									// наименование департамента
-		private ObservableCollection<Worker> workers;			// работники департамента
+		private string name;                                    // наименование департамента
+		private ObservableCollection<Worker> workers;           // работники департамента
 		private ObservableCollection<Department> departments;   // поддепартаменты
-		
-		private static List<Department> allSubDepartments;		// ВСЕ поддепартаменты
-		private static int countDep = 0;						// счетчик для идентификатора департамента
+
+		private static List<Department> allSubDepartments;      // ВСЕ поддепартаменты
+		private static int countDep = 0;                        // счетчик для идентификатора департамента
 
 		#endregion // Fields
 

@@ -1,35 +1,21 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Начальник департамента
 	/// </summary>
-	public class DepBoss : Worker, INotifyPropertyChanged
+	public class DepBoss : Worker
 	{
-		#region INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public void OnPropertyChanged([CallerMemberName] string prop = "")
-		{
-			if (PropertyChanged != null)
-				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
-		}
-
-		#endregion // INotifyPropertyChanged
-
 		#region Constructors
 
 		/// <summary>
 		/// Конструктор по умолчанию
 		/// </summary>
-		public DepBoss() 
-		{ 
+		public DepBoss()
+		{
 			Id = ++countWorker;
-			BirthDate = DateTime.Now;	// для корректного отображения возраста (костыль)
+			BirthDate = DateTime.Now;   // для корректного отображения возраста (костыль)
 		}
 
 		/// <summary>

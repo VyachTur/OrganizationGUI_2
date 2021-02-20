@@ -1,26 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace OrganizationGUI.Classes
 {
 	/// <summary>
 	/// Рабочий (сотрудник)
 	/// </summary>
-	public class Employee : Worker, IPost, ISalary, INotifyPropertyChanged
+	public class Employee : Worker, IPost, ISalary
 	{
-		#region INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public void OnPropertyChanged([CallerMemberName] string prop = "")
-		{
-			if (PropertyChanged != null)
-				PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
-		}
-
-		#endregion // INotifyPropertyChanged
-
 		#region Constructors
 
 		/// <summary>
@@ -42,7 +28,7 @@ namespace OrganizationGUI.Classes
 			LastName = lastName;
 			BirthDate = birthDate;
 			NamePost = namePost;
-			Salary = salary * 168;  // умножаем на 168 рабочих часов в месяце
+			Salary = salary;  // умножаем на 168 рабочих часов в месяце
 
 			Id = ++countWorker;
 		}
@@ -114,33 +100,33 @@ namespace OrganizationGUI.Classes
 		/// </summary>
 		public string NamePost
 		{
-			get 
-			{ 
+			get
+			{
 				return namePost;
 			}
 
 			set
-			{ 
+			{
 				namePost = value;
-				OnPropertyChanged("NamePost"); 
-			} 
+				OnPropertyChanged("NamePost");
+			}
 		}
 
 		/// <summary>
 		/// Зарплата сотрудника
 		/// </summary>
-		public int Salary 
-		{ 
+		public int Salary
+		{
 			get
 			{
-				return salary;
+				return salary * 168;
 			}
 
 			set
 			{
 				salary = value;
 				OnPropertyChanged("Salary");
-			} 
+			}
 		}
 
 		#endregion  // Properties
@@ -170,7 +156,7 @@ namespace OrganizationGUI.Classes
 		private string lastName;                // фамилия сотрудника
 		private DateTime birthDate;             // дата рождения сотрудника
 
-		private string namePost;	// наименование должности сотрудника
+		private string namePost;    // наименование должности сотрудника
 		private int salary;         // зарплата сотрудника
 
 		#endregion   // Fields
