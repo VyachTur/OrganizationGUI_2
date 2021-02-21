@@ -164,6 +164,19 @@ namespace OrganizationGUI.Classes
 		}
 
 
+
+
+		#region Заглушка для исключения ошибок при Bindings
+
+		public DepBoss LocalBoss { get; }
+		public double LocalBossSalary { get; }
+		public int CountEmployees { get; }
+		public int CountInterns { get; }
+		public IEnumerable<Employee> Employees { get; }
+		public IEnumerable<Intern> Interns { get; }
+
+		#endregion // Заглушка для исключения ошибок при Bindings
+
 		#endregion  // Properties
 
 
